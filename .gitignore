@@ -1,2 +1,4 @@
 secrets.lisp
 pub/uploads/*
+*.css.map
+pub/css/styles.css
