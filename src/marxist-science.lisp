@@ -12,36 +12,6 @@
         (funcall next)
         (tbnl:redirect "/login"))))
 
-(defroute homepage ("/" :decorators (@html @auth)) ()
-  (standard-page
-   '(:title "Наука марксизм")
-   '(section :class "about"
-     (h1 :class "heading" (span :class "highlight" "Наука марксизм"))
-     (p "Наука марксизм — коммунистический интернет-журнал, целью которого является развитие марксистской
-         теории, пропаганда и агитация диалектического и исторического материализма, политической
-         экономии и научного социализма.")
-     (p "Ресурс "
-      (span :class "highlight" "«Наука Марксизм»")
-      " является печатным органом коммунистической кружковой организации. Редакция НМ обеспечивает работу
-          по ряду направлений:")
-     (p "Во-первых, это научно-исследовательская работа, отдельные редакторы или научно-исследовательские
-         группы занимаются этой работой в соответствии с генеральной линией.")
-     (p "Во-вторых, это образовательный процесс, в рамках которого позиции группы доводятся до слушателей
-         кружков.")
-     (p "В-третьих, это агитационная работа, направленная на распространение марксистско-ленинских воззрений
-         вширь и вглубь."))))
-
-(defroute login ("/login" :decorators (@html @auth)) ()
-  (when *user*
-    (return-from login (tbnl:redirect "/")))
-  (standard-page
-   '(:title "Вход | Наука Марксизм")
-   '(section :class "login"
-     (h1 "Вход")
-     (form :action "/api.authenticate" :method "POST"
-      (input :type "password" :name "password" :placeholder "Пароль")
-      (input :type "submit" :value "Войти")))))
-
 (defroute logout ("/logout" :decorators ()) ()
   (log-out)
   (tbnl:redirect "/"))
@@ -105,34 +75,3 @@
         (declare (ignore id))
         (setf (getf output-plist :content-url) url)
         (json:encode-json-plist-to-string output-plist)))))
-
-
-;;; articles
-(defroute articles ("/articles" :method :get :decorators (@html @auth)) ()
-  (standard-page
-   '(:title "статьи | НМ")
-   '(section :id "sectors"
-     (h1 :class "heading" (span :class "highlight" "статьи по разделам"))
-     (div :class "sector"
-      ))))
-
-(defun list->div.manage-sector (list)
-  (destructuring-bind (id name cover-url) list
-    `(div
-      :class "manage-sector"
-      :id ,id
-      ,(unless (eq cover-url :null) `(img :src ,cover-url))
-      (div :class "manage-menu"
-           (span :class "title" ,name)))))
-
-(defroute articles.manage ("/articles/manage" :method :get :decorators (@html @auth-required)) ()
-  (with-pooled-connection
-    (standard-page
-     '(:title "статьи/правка | НМ")
-     `(section :id "manage-articles"
-       (h1 :class "heading" (span :class "highlight" "статьи/разделы/правка"))
-       ,@ (mapcar #'list->div.manage-sector
-                  (pomo:query "SELECT * FROM sectors_names_covers" :lists))))))
-
-;;; reading-list
-;;; archive

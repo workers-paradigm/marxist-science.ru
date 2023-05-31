@@ -6,7 +6,7 @@
   :version "0.0.1"
   :depends-on (#:hunchentoot
                #:easy-routes
-               #:jhtml
+               #:sushiroller
                #:rutils
                #:postmodern
                #:ironclad
@@ -21,4 +21,5 @@
     ((:file "mime")
      (:file "util")
      (:file "page-templates")
-     (:file "marxist-science")))))
+     (:file "marxist-science")
+     (:file "pages")))))
