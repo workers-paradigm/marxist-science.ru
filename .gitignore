@@ -5,6 +5,7 @@
 /.env
 
 /js/dist
+/js/node_modules
 /js/yarn.lock
 /js/yarn-error.log
 
