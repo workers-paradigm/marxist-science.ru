@@ -1,0 +1,9 @@
+[default]
+limits = { file = "24 MiB", data-form = "32 MiB" }
+
+[default.templates]
+template_dir = "templates"
+
+[default.databases]
+[default.databases.postgres]
+url = "postgres://http@localhost/http"

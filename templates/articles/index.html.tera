@@ -1,0 +1,25 @@
+{% import "macros" as macros %}
+
+{% extends "base" %}
+
+{%- block navigation -%}
+{{ macros::hero(image="/static/img/banner.jpg", title="Статьи") }}
+{%- endblock navigation -%}
+
+{% block contents %}
+<section class="articles">
+  <ul class="articles-list">
+    {% for preview in previews %}
+    <li class="article">
+      <a href="/articles/view/{{ preview.id }}">
+        {%- if preview.cover -%}
+        <img src="{{ preview.cover }}" alt="{{ preview.title }}" />
+        {%- endif -%}
+        <h2 class="article-title">{{- preview.title -}}</h2>
+      </a>
+      <hr>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock contents %}

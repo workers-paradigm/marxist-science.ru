@@ -1,0 +1,23 @@
+{% import "htmx" as htmx %}
+
+{% extends "base" %}
+
+{% block contents %}
+<section class="articles-dashboard">
+  <button
+    class="new-entry save-button"
+    data-hx-post="/articles/create"
+    data-hx-swap="afterbegin"
+    data-hx-target="#entry-list"
+  >добавить</button>
+  <div id="entry-list" class="flex-row-wrap gap-12px">
+    {% for preview in previews %}
+    {{ htmx::articleEntry(entry=preview) }}
+    {% endfor %}
+  </div>
+</section>
+{% endblock contents %}
+
+{% block script %}
+<script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
+{% endblock script %}

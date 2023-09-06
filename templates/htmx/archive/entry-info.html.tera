@@ -1,0 +1,2 @@
+{% import "htmx" as htmx %}
+{{ htmx::archiveEntryInfo(entry=entry) }}

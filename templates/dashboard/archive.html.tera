@@ -1,0 +1,23 @@
+{% import "htmx" as htmx %}
+
+{% extends "base" %}
+
+{% block contents %}
+<section class="archive-menu">
+  <button
+    data-hx-post="/archive/create-entry"
+    data-hx-target="#entry-list"
+    data-hx-swap="afterbegin"
+    class="new-entry save-button"
+  >добавить</button>
+  <section id="entry-list">
+    {% for entry in entries %}
+    {{ htmx::archiveEntry(entry=entry) }}
+    {% endfor %}
+  </section>
+</section>
+{% endblock contents %}
+
+{% block script %}
+<script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
+{% endblock script %}

@@ -1,0 +1,2 @@
+{% import "htmx" as htmx -%}
+{{ htmx::filePicker(id=id, extensions=ext, files=files) }}

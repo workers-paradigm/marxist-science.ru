@@ -1,0 +1,30 @@
+{% extends "base" -%}
+
+{%- block head -%}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="/static/css/image-block.css" />
+{%- endblock head -%}
+
+{%- block contents -%}
+<section class="article-edit">
+  <div class="ce-block__content">
+    <p class="font-light">редактор статей</p>
+    <div class="flex-row-nowrap separator-bottom">
+      <input id="article-id" type="hidden" value="{{id}}">
+      <input type="text" name="title" value="{{title}}" id="article-title"
+             class="flex-1" placeholder="Название статьи...">
+      <div class="horizontal-center">
+        <button id="save" class="save-button">сохранить</button>
+      </div>
+    </div>
+  </div>
+  <div><span id="response-error"></span></div>
+  <div id="editorjs"></div>
+  <div class="ce-block__content">
+  </div>
+</section>
+{%- endblock contents -%}
+
+{% block script %}
+<script type="module" src="/static/js/editor-setup.js"></script>
+{% endblock script %}

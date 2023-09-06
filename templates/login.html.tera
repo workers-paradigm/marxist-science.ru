@@ -1,0 +1,15 @@
+{% extends "base" %}
+
+{% block contents %}
+<form method="POST" action="/login">
+  <label class="input-label">
+    Имя пользователя:
+    <input type="text" name="username"/>
+  </label>
+  <label class="input-label">
+    Пароль:
+    <input type="password" name="password"></input>
+  </label>
+  <input type="submit" value="вход"></input>
+</form>
+{% endblock contents %}

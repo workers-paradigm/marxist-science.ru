@@ -1,0 +1,20 @@
+{% import "macros" as macros %}
+
+{%- extends "base" -%}
+
+{%- block navigation -%}
+{%- if article.cover -%}
+{{- macros::hero(title=article.title, image=article.cover) -}}
+{%- else -%}
+{{ super() }}
+{%- endif -%}
+{%- endblock navigation -%}
+
+{%- block contents -%}
+{%- if not article.cover -%}
+<h1 class="article-title">{{ article.title }}</h1>
+{%- endif -%}
+<section class="article">
+  {{- macros::article(blocks=article.contents.blocks) -}}
+</section>
+{%- endblock contents -%}

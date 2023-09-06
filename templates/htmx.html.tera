@@ -1,0 +1,166 @@
+{% macro articleEntry(entry, print_saved_success=false) %}
+<div class="entry" id="e{{ entry.id }}">
+  <form>
+    <input type="hidden" name="id" value="{{ entry.id }}">
+    <label class="input-label">
+      Название:
+      <input type="text" name="title" value="{{ entry.title }}">
+    </label>
+    <label class="checkbox-label">
+      <input
+        type="checkbox" name="published"
+        {% if entry.published %} checked {% endif %}>
+      Опубликована
+    </label>
+    <div class="flex-column gap-03rem">
+      <a class="edit button no-margin" target="_blank" href="/articles/edit/{{ entry.id }}">редактировать</a>
+      <div class="flex-row-nowrap gap-03rem">
+        <button
+          class="save-button flex-1 no-margin"
+          data-hx-put="/articles/save-info"
+          data-hx-target="div#e{{ entry.id }}"
+          data-hx-swap="outerHTML"
+        >сохранить</button>
+        <button
+          class="delete-button flex-1 no-margin"
+          data-hx-indicator="next .htmx-indicator"
+          data-hx-delete="/articles/delete"
+          data-hx-target="div#e{{ entry.id }}"
+          data-hx-swap="delete"
+          data-hx-confirm="Навсегда удалить {{ entry.title }}?"
+        >удалить</button>
+      </div>
+    </div>
+    {% if print_saved_success %}
+    <img class="htmx-indicator" src="/static/img/spinner.svg">
+    <span class="success">Успешно сохранено!</span>
+    {% endif %}
+  </form>
+</div>
+{% endmacro articleEntry %}
+
+{# <!-- Archive macros --> #}
+{% macro archiveEntry(entry) %}
+<div class="entry" id="e{{ entry.id }}">
+  {{ self::archiveEntryInfo(entry=entry) }}
+  {{ self::archiveEntryFiles(id=entry.id, files=entry.files) }}
+</div>
+{% endmacro archiveEntry %}
+
+{% macro archiveEntryInfo(entry) %}
+<form class="entry-info">
+  <input type="hidden" name="id" value="{{ entry.id }}">
+  <label class="input-label">
+    Название:
+    <input type="text" name="title" value="{{ entry.title }}">
+  </label>
+  <label class="input-label">
+    Автор:
+    <input type="text" name="author" value="{{ entry.author }}">
+  </label>
+  <label class="input-label">
+    Описание:
+    <textarea rows="10" name="description">{{ entry.description }}</textarea>
+  </label>
+  <button
+    class="save-button"
+    data-hx-put="/archive/update-entry-info"
+    data-hx-target="closest form.entry-info"
+    data-hx-swap="outerHTML"
+  >сохранить</button>
+  <button
+    class="delete-button"
+    data-hx-delete="/archive/delete-entry?id={{ entry.id }}"
+    data-hx-target="div#e{{ entry.id }}"
+    data-hx-swap="outerHTML"
+    data-hx-confirm="Удалить запись «{{ entry.title }}»?"
+  >удалить</button>
+</form>
+{% endmacro archiveEntryInfo %}
+
+{% macro archiveEntryFiles(id, files) %}
+{# <!-- TODO: One file upload directly adds the file to the entry. Buttons to remove the files from the entry and for preview. Manage files from main page. --> #}
+<div class="entry-files">
+  <h2>Прикрепленные файлы:</h2>
+  {% if not files %}<p>Ещё никаких нету!</p>{% endif %}
+  <form class="no-margin-bottom">
+    <input type="hidden" name="entry" value="{{ id }}">
+    {% for file in files %}
+    <label class="checkbox-label">
+      <input type="checkbox" name="hashes[]" value="{{ file.hash }}"></input>
+      {{- file.name }}
+      <a href="/static/uploads/{{ file.hash }}.{{ file.ext }}"
+         target="_blank">[preview]</a>
+    </label>
+    {% endfor %}
+    {% if files -%}
+    <button
+      class="delete-button"
+      data-hx-delete="/archive/detach-files"
+      data-hx-target="closest div.entry-files"
+      data-hx-swap="outerHTML"
+    >открепить</button>
+    {%- endif %}
+  </form>
+  <form>
+    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="ext[]" value="djvu">
+    <input type="hidden" name="ext[]" value="pdf">
+    <input type="hidden" name="ext[]" value="doc">
+    <input type="hidden" name="ext[]" value="docx">
+    <input type="hidden" name="ext[]" value="epub">
+    <input type="hidden" name="ext[]" value="fb2">
+    <button
+      class="save-button"
+      data-hx-get="/upload/file-picker"
+      data-hx-swap="outerHTML"
+      data-hx-target="closest form"
+      data-hx-include="closest form"
+    >добавить</button>
+  </form>
+</div>
+{% endmacro archiveEntryFiles %}
+
+{% macro filePicker(id, extensions, files) %}
+<form>
+  {% if id %}
+  <input type="hidden" name="entry" value="{{ id }}">
+  {% endif %}
+  <label class="input-label">
+  <input
+    type="file"
+    name="files[]"
+    accept="image/djvu, application/pdf, application/msword, application/fb2, application/epub+zip, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    multiple
+    data-hx-encoding="multipart/form-data"
+    data-hx-put="/upload/files"
+    data-hx-swap="outerHTML"
+    data-hx-target="closest form"
+    data-hx-include="closest form"
+  ></label>
+  {% for ext in extensions %}
+  <input type="hidden" name="ext[]" value="{{ ext }}">
+  {% endfor %}
+  {% for file in files %}
+  <label class="checkbox-label">
+    <input type="checkbox" name="hashes[]" value="{{ file.hash }}">
+    {{ file.name }}
+    <a href="/static/uploads/{{ file.hash }}.{{ file.ext }}"
+       target="_blank">[preview]</a>
+  </label>
+  {% endfor %}
+  <button
+    class="save-button"
+    data-hx-post="/archive/attach-files"
+    data-hx-swap="outerHTML"
+    data-hx-target="closest div.entry-files"
+  >&check;</button>
+  <button
+    class="delete-button"
+    data-hx-delete="/upload/delete"
+    data-hx-swap="outerHTML"
+    data-hx-target="closest form"
+    data-hx-confirm="Удалить все выбранные файлы с сервера? (безвозвратно)"
+  >&#x1F5D1</button>
+</form>
+{% endmacro filePicker %}

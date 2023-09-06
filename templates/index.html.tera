@@ -1,0 +1,9 @@
+{% extends "base" %}
+
+{% block title %}
+hi
+{% endblock title %}
+
+{% block contents %}
+Hello, world!
+{% endblock contents %}

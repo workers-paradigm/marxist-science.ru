@@ -1,0 +1,18 @@
+{% import "htmx" as htmx %}
+
+{% extends "base" %}
+
+{% block contents %}
+<ul class="admin-menu">
+  <li><a href="/dashboard/articles">Управление статьями</a></li>
+  <li><a href="/dashboard/archive">Управление записями в архиве</a></li>
+</ul>
+<div>
+  <h1>Правка контентом</h1>
+  {{ htmx::filePicker(id="", extensions=["jpeg", "png", "webp", "djvu", "pdf", "doc", "docx", "fb2"], files=files) }}
+</div>
+{% endblock contents %}
+
+{% block script %}
+<script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
+{% endblock script %}

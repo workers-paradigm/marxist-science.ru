@@ -1,0 +1,47 @@
+{% import "macros" as macros %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
+    {% endblock head %}
+  </head>
+  <body>
+    {% block navigation %}
+    {{ macros::nav() }}
+    {% endblock navigation %}
+    <div class="content">
+      {% block contents %}{% endblock contents %}
+      {% block script %}{% endblock script %}
+    </div>
+    <footer>
+      <div class="center">
+        <p class="copyright-notice">&copy; 2023 Наука марксизм</p>
+        <div class="website-menus">
+          <ul>
+            Наши соц. сети:
+            <li><a href="https://vk.com/marxist_science">ВК</a></li>
+            <li><a href="https://t.me/marxist_science">Телеграм</a></li>
+            <li><a href="https://youtube.com/@istorik-marksist">Ютуб-канал</a></li>
+          </ul>
+          {% if logged_in %}
+          <ul>
+            Меню админа:
+            <li><a href="/dashboard">Панель управления</a></li>
+            <li><a href="/dashboard/articles">Управление статьями</a></li>
+            <li><a href="/dashboard/articles">Управление архивом</a></li>
+          </ul>
+          {% else %}
+          <ul>
+            Аккаунт:
+            <li><a href="/login">Вход</a></li>
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

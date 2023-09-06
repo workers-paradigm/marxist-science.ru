@@ -1,0 +1,50 @@
+div.image-picker {
+  box-sizing: border-box;
+  & * {
+    box-sizing: border-box;
+    border-radius: 8px;
+  }
+
+  width: 100%;
+  padding: 15px;
+
+  span.error {
+    display: block;
+    padding: 15px;
+    background-color: #FF6969;
+    color: #fff;
+    margin-bottom: 15px;
+  }
+
+  img {
+    width: 100%;
+    transition-duration: 0.3s;
+    margin-bottom: 15px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+figure.captioned-image {
+  box-sizing: border-box;
+  & * {
+    box-sizing: border-box;
+    border-radius: 8px;
+  }
+
+  margin: 0;
+  padding: 15px;
+
+  img {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  figcaption {
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+  }
+}

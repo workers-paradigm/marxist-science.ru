@@ -1,0 +1,36 @@
+{% import "macros" as macros %}
+
+{% extends "base" %}
+
+{% block navigation %}
+{{- macros::hero(title="Архив", image="/static/img/banner.jpg") -}}
+{% endblock navigation %}
+
+{% block contents %}
+<section class="archive">
+  {% for entry in entries %}
+  <div class="entry" id="{{ entry.id }}">
+    <div class="info">
+      <h3 slot="author">{{ entry.author }}</h3>
+      <h1 slot="title">{{ entry.title }}</h1>
+      <p slot="description">{{ entry.description }}</p>
+    </div>
+    {% if entry.files %}
+    <div class="file-list">
+      <ul>
+        {% for file in entry.files %}
+        <li><a class="button" href="/static/uploads/{{ file.hash }}.{{ file.ext }}" target="_blank">
+          {{- file.ext -}}
+        </a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endblock contents %}
+
+{% block script %}
+<script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
+{% endblock script %}

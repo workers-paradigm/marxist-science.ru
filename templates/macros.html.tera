@@ -1,0 +1,63 @@
+{%- macro nav() -%}
+<nav class="navigation">
+  <a class="logo" href="/"><img src="/static/img/logo.png" alt="Наука Марксизм">
+    <span>Наука марксизм</span></a>
+  <ul class="navigation-links">
+    <li><a href="/articles">Статьи</a></li>
+    <li><a href="/archive">Архив</a></li>
+  </ul>
+</nav>
+{%- endmacro nav -%}
+
+{%- macro hero(title, image) -%}
+<div class="hero" style='background-image: url({{ image }})'>
+  <div class="hero-background">
+    {{ self::nav() }}
+    <div class="hero-fill">
+      <h1 class="title-container">
+        <span>{{- title -}}</span>
+      </h1>
+    </div>
+  </div>
+</div>
+{%- endmacro hero -%}
+
+{%- macro articleItems(list) -%}
+{%- for item in list -%}
+<li>{{ item | safe }}</li>
+{%- endfor -%}
+{%- endmacro items -%}
+
+{%- macro article(blocks) -%}
+<div class="article">
+  {%- for block in blocks -%}
+  <div class="block">
+    {%- if block.type == "paragraph" -%}
+    <p class="paragraph">{{ block.data.text | safe }}</p>
+    {%- elif block.type == "heading" -%}
+    <h{{ block.data.level }} class="heading" id="{{ block.id }}">
+      <a class="heading-anchor" href="#{{ block.id }}">{{- block.data.text -}}</a>
+    </h{{ block.data.level -}}>
+    {%- elif block.type == "list" -%}
+    {%- if block.data.style == "ordered" -%}
+    <ol class="list">{{ self::articleItems(list=block.data.items) }}</ol>
+    {%- else -%}
+    <ul class="list">{{ self::articleItems(list=block.data.items) }}</ul>
+    {%- endif -%}
+    {%- elif block.type == "quote" -%}
+    <figure class="quote"><p class="quote-text">{{ block.data.text | safe }}</p>
+      {%- if block.data.caption -%}
+      <figcaption class="quote-caption">{{ block.data.caption }}</figcaption>
+      {%- endif -%}
+    </figure>
+    {%- elif block.type == "image" -%}
+    <figure class="image"><img src="{{ block.data.url | safe }}">
+      {%- if block.data.caption -%}
+      <figcaption class="image-caption">{{ block.data.caption }}</figcaption>
+      {%- endif -%}
+    </figure>
+    {%- endif -%}
+  </div>
+  {%- endfor -%}
+</div>
+{%- endmacro article -%}
