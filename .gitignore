@@ -1,0 +1,11 @@
+/target
+
+/.cargo
+
+/.env
+
+/js/dist
+/js/yarn.lock
+/js/yarn-error.log
+
+/static/uploads
