@@ -10,14 +10,16 @@
 {%- endmacro nav -%}
 
 {%- macro hero(title, image) -%}
-<div class="hero" style='background-image: url({{ image }})'>
+<div class="hero" style='background-image: url("{{ image }}")'>
   <div class="hero-background">
     {{ self::nav() }}
+    {% if title %}
     <div class="hero-fill">
       <h1 class="title-container">
         <span>{{- title -}}</span>
       </h1>
     </div>
+    {% endif %}
   </div>
 </div>
 {%- endmacro hero -%}
