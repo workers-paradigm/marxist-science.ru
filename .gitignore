@@ -10,5 +10,5 @@
 /js/yarn-error.log
 
 /static/uploads
-/static/css/*.map.css
+/static/css/*.css.map
 /static/css/*.css
