@@ -31,8 +31,8 @@
         >удалить</button>
       </div>
     </div>
-    {% if print_saved_success %}
     <img class="htmx-indicator" src="/static/img/spinner.svg">
+    {% if print_saved_success %}
     <span class="success">Успешно сохранено!</span>
     {% endif %}
   </form>

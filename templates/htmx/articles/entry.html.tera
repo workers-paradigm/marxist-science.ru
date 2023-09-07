@@ -1,2 +1,2 @@
 {% import "htmx" as htmx %}
-{{ htmx::articleEntry(entry=entry, print_saved_success=just_saved) }}
+{{ htmx::articleEntry(entry=entry, print_saved_success=false) }}
