@@ -62,13 +62,13 @@ pub enum BlockVariant {
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Paragraph {
-    text: String,
+    text: CleanString,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Heading {
-    text: String,
+    text: CleanString,
     level: i32,
 }
 
@@ -85,7 +85,7 @@ pub enum ListType {
 #[serde(crate = "rocket::serde", rename_all = "lowercase")]
 pub struct List {
     style: ListType,
-    items: Vec<String>,
+    items: Vec<CleanString>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -98,8 +98,8 @@ pub enum Alignment {
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Quote {
-    text: String,
-    caption: String,
+    text: CleanString,
+    caption: CleanString,
     alignment: Alignment,
 }
 
@@ -107,7 +107,7 @@ pub struct Quote {
 #[serde(crate = "rocket::serde")]
 pub struct Image {
     pub url: String,
-    caption: String,
+    caption: CleanString,
 }
 
 impl Block {
@@ -115,8 +115,22 @@ impl Block {
         Self {
             id: String::from("1234"),
             variant: BlockVariant::Paragraph(Paragraph {
-                text: String::new(),
+                text: CleanString(String::new()),
             }),
         }
+    }
+}
+
+#[derive(Serialize)]
+#[serde(from = "String", crate = "rocket::serde")]
+pub struct CleanString(String);
+
+impl<'de> Deserialize<'de> for CleanString {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: rocket::serde::Deserializer<'de>,
+    {
+        let str: String = Deserialize::deserialize(deserializer)?;
+        Ok(Self(str.replace("&nbsp;", " ")))
     }
 }
