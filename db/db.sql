@@ -79,4 +79,11 @@ $down$
   DROP TABLE users;
 $down$);
 
+CALL new_version(5, $up$
+  ALTER TABLE articles ADD COLUMN author text NOT NULL DEFAULT '';
+$up$,
+$down$
+  ALTER TABLE articles DROP COLUMN author;
+$down$);
+
 COMMIT;

@@ -3,19 +3,20 @@
 {% extends "base" %}
 
 {%- block navigation -%}
-{{ macros::hero(image="/static/img/banner.jpg", title="Статьи") }}
+{{ macros::hero(image="/static/img/banner-article.png", title="Статьи") }}
 {%- endblock navigation -%}
 
 {% block contents %}
 <section class="articles">
   <ul class="articles-list">
-    {% for preview in previews %}
+    {% for entry in previews %}
     <li class="article">
-      <a href="/articles/view/{{ preview.id }}">
-        {%- if preview.cover -%}
-        <img src="{{ preview.cover }}" alt="{{ preview.title }}" />
+      <a href="/articles/view/{{ entry.id }}">
+        {%- if entry.cover -%}
+        <img src="{{ entry.cover }}" alt="{{ entry.title }}" />
         {%- endif -%}
-        <h2 class="article-title">{{- preview.title -}}</h2>
+        <h2 class="title">{{- entry.title -}}</h2>
+        <span class="author">{{ entry.author }}</span>
       </a>
     </li>
     {% endfor %}

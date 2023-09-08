@@ -9,13 +9,18 @@
 <section class="article-edit">
   <div class="ce-block__content">
     <p class="font-light">редактор статей</p>
-    <div class="flex-row-nowrap separator-bottom">
-      <input id="article-id" type="hidden" value="{{id}}">
-      <input type="text" name="title" value="{{title}}" id="article-title"
-             class="flex-1" placeholder="Название статьи...">
-      <div class="horizontal-center">
-        <button id="save" class="save-button">сохранить</button>
-      </div>
+    <div class="information-container">
+      <input type="hidden" value="{{ id }}" id="id">
+      <label class="input-label">
+        <input type="text" name="title" value="{{ title }}" id="title"
+               class="flex-1" placeholder="Название статьи...">
+      </label>
+      <label class="input-label">
+
+        <input type="text" name="author" value="{{ author }}" id="author"
+               class="flex-1" placeholder="Автор">
+      </label>
+      <button id="save" class="save-button">сохранить</button>
     </div>
   </div>
   <div><span id="response-error"></span></div>

@@ -5,15 +5,7 @@ use rocket::serde::{Deserialize, Serialize};
 pub struct ArticleForm {
     pub id: i32,
     pub title: String,
-    pub cover: Option<String>,
-    pub published: bool,
-}
-
-#[derive(Serialize, Deserialize, Default)]
-#[serde(crate = "rocket::serde")]
-pub struct Preview {
-    pub id: i32,
-    pub title: String,
+    pub author: String,
     pub cover: Option<String>,
     pub published: bool,
 }
@@ -23,6 +15,7 @@ pub struct Preview {
 pub struct Article {
     pub id: i32,
     pub title: String,
+    pub author: String,
     #[serde(alias = "coverURL")]
     pub cover: Option<String>,
     pub contents: EditorJS,

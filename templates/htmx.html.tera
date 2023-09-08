@@ -6,6 +6,10 @@
       Название:
       <input type="text" name="title" value="{{ entry.title }}">
     </label>
+    <label class="input-label">
+      Автор:
+      <input type="text" name="author" value="{{ entry.author }}">
+    </label>
     <label class="checkbox-label">
       <input
         type="checkbox" name="published"

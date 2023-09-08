@@ -23,10 +23,10 @@ const editor = new EditorJS({
   },
 });
 
-let articleId = parseInt(document.getElementById('article-id').value);
+const id = parseInt(document.getElementById('id').value);
 
 editor.isReady.then(() => {
-  fetch('/articles/contents/' + encodeURIComponent(articleId), {
+  fetch('/articles/contents/' + encodeURIComponent(id), {
     method: 'GET',
   }).then(async response => {
     if (response.ok) {
@@ -41,8 +41,9 @@ editor.isReady.then(() => {
     const coverURL =
       contents.blocks.find(obj => obj.type === 'image')?.data?.url ?? null;
     let savedResult = {
-      id: parseInt(document.getElementById('article-id').value),
-      title: document.getElementById('article-title').value,
+      id: parseInt(document.getElementById('id').value),
+      title: document.getElementById('title').value,
+      author: document.getElementById('author').value,
       coverURL: coverURL,
       contents: contents,
     };

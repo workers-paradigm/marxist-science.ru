@@ -4,7 +4,7 @@
 
 {%- block navigation -%}
 {%- if article.cover -%}
-{{- macros::hero(title=article.title, image=article.cover) -}}
+{{- macros::hero(title=article.title, image="/static/img/banner-article.png") -}}
 {%- else -%}
 {{ super() }}
 {%- endif -%}

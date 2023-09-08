@@ -11,9 +11,9 @@
   {% for entry in entries %}
   <div class="entry" id="{{ entry.id }}">
     <div class="info">
-      <h3 slot="author">{{ entry.author }}</h3>
-      <h1 slot="title">{{ entry.title }}</h1>
-      <p slot="description">{{ entry.description }}</p>
+      <span class="author">{{ entry.author }}</span>
+      <h1 class="title">{{ entry.title }}</h1>
+      <p class="description">{{ entry.description }}</p>
     </div>
     {% if entry.files %}
     <div class="file-list">

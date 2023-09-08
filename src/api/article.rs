@@ -6,8 +6,8 @@ use crate::auth::AdminOnly;
 use crate::db::{Connection, Postgres};
 use crate::errors::Errors;
 use crate::models::{
-    article::{ArticleForm, BlockVariant, EditorJS},
-    Article, Block, Preview,
+    article::{ArticleForm, EditorJS},
+    Article, Block,
 };
 
 #[rocket::get("/articles/contents/<id>")]
@@ -34,6 +34,7 @@ pub async fn create(_admin: AdminOnly, db: Connection<Postgres>) -> Result<Templ
     let article_info = ArticleForm {
         id: row.try_get(0)?,
         title: title.to_owned(),
+        author: String::new(),
         cover: None,
         published: false,
     };
@@ -49,13 +50,14 @@ pub async fn edit(
     id: i32,
     db: Connection<Postgres>,
 ) -> Result<Template, Errors> {
-    db.query_opt("SELECT title FROM articles WHERE id = $1", &[&id])
+    db.query_opt("SELECT title, author FROM articles WHERE id = $1", &[&id])
         .await?
         .map_or(Err(Errors::NotFound), |row| {
             // -> Result<Article, Errors>
             Ok(Article {
                 id,
                 title: row.try_get(0)?,
+                author: row.try_get(1)?,
                 ..Default::default()
             })
         })
@@ -74,10 +76,11 @@ pub async fn save(
         article.contents.blocks.push(Block::empty());
     }
     db.execute(
-        "UPDATE articles SET title = $2, contents = $3, cover = $4 WHERE id = $1",
+        "UPDATE articles SET title = $2, author = $3, contents = $4, cover = $5 WHERE id = $1",
         &[
             &article.id,
             &article.title,
+            &article.author,
             &json::to_string(&article.contents)?,
             &article.cover,
         ],
@@ -90,23 +93,19 @@ pub async fn save(
 #[rocket::get("/articles/view/<id>")]
 pub async fn view(id: i32, db: Connection<Postgres>) -> Result<Template, Errors> {
     db.query_opt(
-        "SELECT title, cover, contents FROM articles WHERE id = $1 AND published",
+        "SELECT title, author, cover, contents FROM articles WHERE id = $1 AND published",
         &[&id],
     )
     .await?
     .map_or(Err(Errors::NotFound), |row| {
         let title: String = row.try_get(0)?;
-        let cover: Option<String> = row.try_get(1)?;
-        let mut contents: EditorJS = json::from_str(row.try_get::<usize, &str>(2)?)?;
-        if let Some(url) = &cover {
-            contents.blocks.retain(|block| match &block.variant {
-                BlockVariant::Image(img) => img.url != url.as_str(),
-                _ => true,
-            });
-        }
+        let author: String = row.try_get(1)?;
+        let cover: Option<String> = row.try_get(2)?;
+        let contents: EditorJS = json::from_str(row.try_get(3)?)?;
         Ok(Article {
             id,
             title,
+            author,
             cover,
             contents,
         })
@@ -133,8 +132,13 @@ pub async fn save_info(
     article: Form<ArticleForm>,
 ) -> Result<Template, Errors> {
     db.execute(
-        "UPDATE articles SET title = $2, published = $3 WHERE id = $1",
-        &[&article.id, &article.title, &article.published],
+        "UPDATE articles SET title = $2, author = $3, published = $4 WHERE id = $1",
+        &[
+            &article.id,
+            &article.title,
+            &article.author,
+            &article.published,
+        ],
     )
     .await
     .map(|_| {
@@ -153,38 +157,42 @@ pub async fn index(db: Connection<Postgres>) -> Result<Template, Errors> {
         .map(|previews| Template::render("articles/index", context! { previews: previews }))
 }
 
-pub async fn fetch_published_previews(db: &Connection<Postgres>) -> Result<Vec<Preview>, Errors> {
+pub async fn fetch_published_previews(
+    db: &Connection<Postgres>,
+) -> Result<Vec<ArticleForm>, Errors> {
     db.query(
-        "SELECT id, title, cover FROM articles WHERE published
+        "SELECT id, title, author, cover FROM articles WHERE published
          ORDER BY created_at DESC, title",
         &[],
     )
     .await?
     .iter()
     .map(|row| {
-        Ok(Preview {
+        Ok(ArticleForm {
             id: row.try_get(0)?,
             title: row.try_get(1)?,
-            cover: row.try_get(2)?,
+            author: row.try_get(2)?,
+            cover: row.try_get(3)?,
             published: true,
         })
     })
     .collect()
 }
 
-pub async fn fetch_all_previews(db: &Connection<Postgres>) -> Result<Vec<Preview>, Errors> {
+pub async fn fetch_all_previews(db: &Connection<Postgres>) -> Result<Vec<ArticleForm>, Errors> {
     db.query(
-        "SELECT id, title, cover, published FROM articles ORDER BY created_at DESC, title",
+        "SELECT id, title, author, cover, published FROM articles ORDER BY created_at DESC, title",
         &[],
     )
     .await?
     .iter()
     .map(|row| {
-        Ok(Preview {
+        Ok(ArticleForm {
             id: row.try_get(0)?,
             title: row.try_get(1)?,
-            cover: row.try_get(2)?,
-            published: row.try_get(3)?,
+            author: row.try_get(2)?,
+            cover: row.try_get(3)?,
+            published: row.try_get(4)?,
         })
     })
     .collect()

@@ -47,15 +47,24 @@
     <ul class="list">{{ self::articleItems(list=block.data.items) }}</ul>
     {%- endif -%}
     {%- elif block.type == "quote" -%}
-    <figure class="quote"><p class="quote-text">{{ block.data.text | safe }}</p>
+    <figure class="quote">
+      <div class="left-border"></div>
+      <p class="quote-text">{{ block.data.text | safe }}</p>
       {%- if block.data.caption -%}
-      <figcaption class="quote-caption">{{ block.data.caption }}</figcaption>
+      <figcaption class="quote-caption">
+        <div class="absolute-helper">
+          <img class="hand-indicator" src="/static/img/hand.jpg" />
+          <div>
+            <span>{{ block.data.caption }}</span>
+          </div>
+        </div>
+      </figcaption>
       {%- endif -%}
     </figure>
     {%- elif block.type == "image" -%}
     <figure class="image"><img src="{{ block.data.url | safe }}">
       {%- if block.data.caption -%}
-      <figcaption class="image-caption">{{ block.data.caption }}</figcaption>
+      <figcaption class="image-caption"><span>{{ block.data.caption }}</span></figcaption>
       {%- endif -%}
     </figure>
     {%- endif -%}
