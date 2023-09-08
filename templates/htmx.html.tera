@@ -122,7 +122,7 @@
 {% endmacro archiveEntryFiles %}
 
 {% macro filePicker(id, extensions, files) %}
-<form>
+<form class="file-picker">
   {% if id %}
   <input type="hidden" name="entry" value="{{ id }}">
   {% endif %}

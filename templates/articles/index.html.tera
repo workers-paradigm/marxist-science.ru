@@ -17,7 +17,6 @@
         {%- endif -%}
         <h2 class="article-title">{{- preview.title -}}</h2>
       </a>
-      <hr>
     </li>
     {% endfor %}
   </ul>

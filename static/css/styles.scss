@@ -1,9 +1,13 @@
+// TODO: Refactor css
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --link-color: #7286D3;
-  --link-rgb: 114, 134, 211;
+  --link-color: #688F9C;
+  --link-rgb: 104, 143, 156; // 114, 134, 211;
+  --quote-bg: #ECF6FB; // #f0f0f8
+  --coral: #D85E51;
 }
 
 * {
@@ -37,7 +41,7 @@ footer {
   font-size: 0.8em;
   bottom: 0;
   width: 100%;
-  padding: 2rem 0;
+  padding: 2rem 1rem;
   background: #468;
   color: #fff;
 
@@ -80,30 +84,62 @@ h1, h2, h3, h4, h5, h6, p {
   margin-bottom: 0.4em;
 }
 
+h1 {
+  font-size: 2rem;
+  @media(min-width: 768px) {
+    font-size: 3rem;
+  }
+}
+h2 {
+  font-size: 1.8rem;
+  @media(min-width: 768px) {
+    font-size: 2.5rem;
+  }
+}
+h3 {
+  font-size: 1.5rem;
+  @media(min-width: 768px) {
+    font-size: 1.9rem;
+  }
+}
+h4 {
+  font-size: 1.3rem;
+}
+h5 {
+  font-size: 1.1rem;
+}
+h6 {
+  font-size: 0.8rem;
+}
+
 nav.navigation {
   width: 100%;
-  height: 64px;
+  @media(min-width: 768px) {
+    height: 64px;
+  }
   padding: 0 24px;
 
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
+  @media(min-width: 768px) {
+    flex-flow: row;
+    justify-content: space-between;
+  }
   align-items: center;
-  justify-content: space-between;
 
   background: #eee;
 
   a.logo {
     display: flex;
     align-items: center;
-    height: 70%;
 
     img {
-      height: 100%;
+      height: 48px;
       border-radius: 50%;
     }
 
     span {
-      margin-left: 24px;
+      margin-left: 6px;
       font-weight: 600;
     }
   }
@@ -111,78 +147,104 @@ nav.navigation {
   ul.navigation-links {
     list-style: none;
     display: flex;
-    flex-flow: row;
+    flex-flow: column;
+    @media(min-width: 768px) {
+      flex-flow: row;
+    }
+
+    @media(max-width: 768px) {
+      li {
+        margin: 12px;
+        &:last-child {
+          margin-bottom: 24px;
+        }
+      }
+    }
 
     &, li, li a {
       height: 100%;
     }
 
     li {
-      &:not(:last-child) {
-        margin-right: 24px;
+      @media(min-width: 768px) {
+        transition: all 0.2s ease-out;
+        &:hover {
+          color: #000;
+          background: #ccd0d0;
+        }
       }
-    }
 
-    li a {
-      display: flex;
-      align-items: center;
-
-      &:hover {
-        text-decoration: underline;
+      a {
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
       }
     }
   }
 }
 
 div.hero {
-  height: 40vh;
+  height: 50vh;
   @media(min-width: 768px) {
-    height: 60vh;
+    height: 70vh;
   }
-  background-size: cover;
-  background-position: center;
   position: relative;
   width: 100%;
+  display: flex;
+  flex-flow: column;
 
-  div.hero-background {
-    background-color: rgba(0, 0, 0, 0.3);
-    height: 100%;
-    color: #fff;
-    display: flex;
-    flex-flow: column;
-
-    align-items: center;
-    justify-content: start;
-
+  nav.navigation {
+    color: #000;
+  }
+  @media(min-width: 768px) {
     nav.navigation {
+      color: #fff;
       background: none;
       z-index: 1;
+      a.logo span {
+        margin-left: 24px;
+        background: var(--coral);
+      }
     }
 
     div.hero-fill {
       position: absolute;
-      height: 100%;
+    }
+  }
+
+  div.hero-fill {
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+
+    div.hero-background {
+      background-color: rgba(0, 0, 0, 0.3);
       width: 100%;
+      height: 100%;
+
       display: flex;
+      flex-flow: column;
       align-items: center;
       justify-content: center;
+    }
 
-      h1.title-container {
-        padding: 10px 30px;
-        border: 4px solid #fff;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
-        font-size: 1.5rem;
-        @media(min-width: 768px) {
-          font-size: 3rem;
-        }
-        text-align: center;
-        display: block;
-        max-width: 80%;
+    h1.title-container {
+      color: #fff;
+      padding: 5px 20px;
+      border: 4px solid #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      @media(min-width: 768px) {
+        font-size: 3rem;
+      }
+      text-align: center;
+      display: block;
+      max-width: 80%;
 
-        span {
-          background: linear-gradient(rgba(0,0,0,0) 27%, rgba(0,0,0,1) 27%, rgba(0,0,0,1) 88%, rgba(0,0,0,0) 88%);
-        }
+      span {
+        background: linear-gradient(rgba(0,0,0,0) 27%, var(--coral) 27%, var(--coral) 88%, rgba(0,0,0,0) 88%);
       }
     }
   }
@@ -201,18 +263,26 @@ div.content {
 
 section.articles ul.articles-list {
   list-style: none;
-
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column;
   gap: 12px;
   li {
-    min-width: 30%;
     flex: 1;
     a {
       display: block;
       img {
+        max-height: 80vh;
+        // width: auto;
         margin-bottom: 0.3em;
       }
+    }
+  }
+
+  @media(min-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    li {
+      min-width: 30%;
     }
   }
 }
@@ -228,9 +298,9 @@ section.articles ul.articles-list {
 
 .checkbox-label {
   margin-bottom: 10px;
-  display: grid;
-  grid-template-columns: 1em auto auto;
-  column-gap: 0.5em;
+  display: flex;
+  flex-flow: row;
+  gap: 0.5em;
 }
 
 .input-label {
@@ -260,13 +330,12 @@ input, textarea, button, .button, select {
 }
 
 input[type="text"], input[type="email"], input[type="password"], textarea {
+  margin-bottom: 0.3em;
   border: 1px solid #ddd;
   padding: 10px;
 }
 
 input, textarea, button, .button, select {
-  margin-bottom: 0.3em;
-
   &:focus {
     outline: none;
     border: 1px solid cornflowerblue;
@@ -312,14 +381,12 @@ section.archive-menu {
 
 section.archive {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column;
   justify-content: start;
   gap: 12px;
 
   div.entry {
     flex: 1;
-    min-width: 30%;
-    max-width: 35%;
     display: flex;
     flex-flow: column;
     align-items: start;
@@ -449,17 +516,9 @@ section.article-edit {
   color: #222;
 }
 
-// TODO: Article styles.
-// 1. Bigger line height.
-// 2. Serif, bigger font.
-// 3. Link styles.
-// 4. Block styles, bottom margins.
-
-// TODO: Refactor css
-
 section.article {
   font-size: 1.2rem;
-  font-family: 'Noto Serif', serif;
+  font-family: 'Montserrat', serif;
   font-weight: 450;
   line-height: 1.6;
   hyphens: auto;
@@ -478,7 +537,7 @@ section.article {
   }
 
   a:not(.heading-anchor) {
-    color: var(--link-color); // #6096B4;
+    color: var(--link-color);
     position: relative;
 
     background: linear-gradient(rgba(var(--link-rgb), 0) 52%, rgba(var(--link-rgb), 1) 52%);
@@ -498,15 +557,35 @@ section.article {
   figure {
     p.quote-text {
       padding: 1.6rem;
-      background: #f0f0f8;
+      background: var(--quote-bg);
+      border-left: 4px solid var(--link-color);
       font-style: italic;
     }
 
-    img {
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(50, 50, 70, 0.3);
+    &.image {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      img {
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(50, 50, 70, 0.3);
+        margin: auto;
+      }
+      @media(min-width: 768px) {
+        flex-flow: row nowrap;
+        align-items: start;
+        gap: 24px;
+        img {
+          max-height: 60vh;
+          width: auto;
+          max-width: 80%;
+          margin: 0;
+        }
+        figcaption {
+          margin-top: 0;
+        }
+      }
     }
-
     figcaption {
       margin-top: 14px;
       font-size: 0.8em;
@@ -517,5 +596,23 @@ section.article {
     & *:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+ul.admin-menu {
+  list-style: none;
+}
+
+ul.admin-menu a, form.file-picker a {
+  color: var(--link-color);
+  position: relative;
+
+  background: linear-gradient(rgba(var(--link-rgb), 0) 52%, rgba(var(--link-rgb), 1) 52%);
+  background-size: auto 175%;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    color: #fff;
+    background-position-y: 100%;
   }
 }
