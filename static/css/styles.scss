@@ -417,6 +417,8 @@ section.archive {
   gap: 12px;
 
   div.entry {
+    padding: 20px 30px;
+    background: #E8D4B3;
     flex: 1;
     display: flex;
     flex-flow: column;
@@ -426,7 +428,7 @@ section.archive {
       width: 100%;
       padding: 10px 0;
       margin-bottom: 10px;
-      border-bottom: 3px solid #ddd;
+      // border-bottom: 1px solid #888;
     }
 
     .author {
