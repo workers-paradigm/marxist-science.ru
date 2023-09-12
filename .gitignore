@@ -2,7 +2,7 @@
 
 /.cargo
 
-/.env
+/.env*
 
 /js/dist
 /js/node_modules
