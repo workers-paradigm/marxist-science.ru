@@ -108,7 +108,7 @@ CALL new_version(7, $up$
   CREATE TABLE sessions(
     id bytea PRIMARY KEY,
     user_id integer REFERENCES users(id) ON DELETE CASCADE,
-    expires_at timestamp NOT NULL DEFAULT NOW()
+    expires_at timestamp NOT NULL DEFAULT NOW() + interval '1 week'
   );
 $up$,
 $down$
