@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}{% endblock title %}</title>
     <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
     {% endblock head %}
   </head>
   <body>
@@ -16,7 +17,6 @@
     {% endblock navigation %}
     <div class="content">
       {% block contents %}{% endblock contents %}
-      {% block script %}{% endblock script %}
     </div>
     <footer>
       <div class="center">
@@ -26,23 +26,15 @@
             Наши соц. сети:
             <li><a href="https://vk.com/marxist_science">ВК</a></li>
             <li><a href="https://t.me/marxist_science">Телеграм</a></li>
-            <li><a href="https://youtube.com/@istorik-marksist">Ютуб-канал</a></li>
+            <li><a href="https://youtube.com/@istorik-marxist">Ютуб-канал</a></li>
           </ul>
-          {% if logged_in %}
-          <ul>
-            Меню админа:
-            <li><a href="/dashboard">Панель управления</a></li>
-            <li><a href="/dashboard/articles">Управление статьями</a></li>
-            <li><a href="/dashboard/articles">Управление архивом</a></li>
-          </ul>
-          {% else %}
           <ul>
             Аккаунт:
             <li><a href="/login">Вход</a></li>
           </ul>
-          {% endif %}
         </div>
       </div>
     </footer>
+    {% block script %}{% endblock script %}
   </body>
 </html>

@@ -3,13 +3,15 @@
 {% extends "base" %}
 
 {% block contents %}
+<h1>Правка контентом</h1>
 <ul class="admin-menu">
   <li><a href="/dashboard/articles">Управление статьями</a></li>
   <li><a href="/dashboard/archive">Управление записями в архиве</a></li>
+  <li><a href="/dashboard/rubrics">Управление рубриками</a></li>
 </ul>
 <div>
-  <h1>Правка контентом</h1>
-  {{ htmx::filePicker(id="", extensions=["jpeg", "png", "webp", "djvu", "pdf", "doc", "docx", "fb2"], files=files) }}
+  <h3 style="padding-top: 18px;">Управление файлами</h3>
+  {{ htmx::filePicker(id=false, extensions=["jpeg", "png", "webp", "djvu", "pdf", "doc", "docx", "fb2"], files=files) }}
 </div>
 {% endblock contents %}
 

@@ -1,0 +1,6 @@
+{#
+this is supposed to be in a form that has an id input field. Otherwise the request won't work
+#}
+{% import "htmx/rubrics/macros" as r %}
+
+{{ r::rubrics_of_article(rubrics=rubrics, id=id) }}

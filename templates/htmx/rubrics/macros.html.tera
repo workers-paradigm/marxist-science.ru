@@ -1,0 +1,32 @@
+{% macro rubrics_of_article(rubrics, id) %}
+<div id="rubric-list">
+  {% for rubric in rubrics %}
+  <div>
+    <button
+      data-hx-delete="/rubrics/detach-rubric?rubric_id={{ rubric.id }}&article_id={{ id }}"
+      data-hx-target="#rubric-list"
+      data-hx-swap="outerHTML"
+    >remove</button>
+    <span>{{ rubric.title }}</span>
+  </div>
+  {% endfor %}
+  <button
+    data-hx-get="/rubrics/list-for-picker?article_id={{ id }}"
+    data-hx-swap="outerHTML"
+  >pick a rubric</button>
+</div>
+{% endmacro rubrics_of_article %}
+
+{% macro list_for_picker(rubrics, id) %}
+{% for rubric in rubrics %}
+<div>
+  <button
+    data-hx-put="/rubrics/attach-rubric?rubric_id={{ rubric.id }}&article_id={{ id }}"
+    data-hx-include="#rub-add{{ rubric.id }}"
+    data-hx-swap="outerHTML"
+    data-hx-target="#rubric-list"
+  >+</button>
+  <span>{{ rubric.title }}</span>
+</div>
+{% endfor %}
+{% endmacro list_for_picker %}

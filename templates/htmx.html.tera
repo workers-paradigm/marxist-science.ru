@@ -153,12 +153,14 @@
        target="_blank">[preview]</a>
   </label>
   {% endfor %}
+  {% if id %}
   <button
     class="save-button"
     data-hx-post="/archive/attach-files"
     data-hx-swap="outerHTML"
     data-hx-target="closest div.entry-files"
   >&check;</button>
+  {% endif %}
   <button
     class="delete-button"
     data-hx-delete="/upload/delete"
@@ -168,3 +170,33 @@
   >&#x1F5D1</button>
 </form>
 {% endmacro filePicker %}
+
+{% macro rubric(rubric) %}
+<form>
+  <input type="hidden" name="id" value="{{ rubric.id }}">
+  <img src="{{ rubric.cover }}" alt="NEED RUBRIC COVER">
+  <input
+    type="file" name="file"
+    data-hx-encoding='multipart/form-data'
+    data-hx-put="/rubrics/attach-image?rubric={{ rubric.id }}"
+    data-hx-swap="outerHTML"
+    data-hx-target="closest form">
+  <label class="input-label">
+    Название:
+    <input type="text" name="title" value="{{ rubric.title }}">
+  </label>
+  <button
+    class="save-button"
+    data-hx-put="/rubrics/update"
+    data-hx-swap="outerHTML"
+    data-hx-target="closest form"
+  >&check;</button>
+  <button
+    class="delete-button"
+    data-hx-delete="/rubrics/delete"
+    data-hx-swap="outerHTML"
+    data-hx-target="closest form"
+    data-hx-confirm="Удалить рубрику {{ rubric.title }}?"
+  >&#x1F5D1</button>
+</form>
+{% endmacro rubric %}

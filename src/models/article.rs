@@ -1,4 +1,62 @@
+use crate::models::rubrics::Rubric;
+use crate::{
+    db::{Connection, Postgres},
+    errors::Errors,
+};
 use rocket::serde::{Deserialize, Serialize};
+
+pub async fn get_published(
+    db: &Connection<Postgres>,
+    cap: Option<i64>,
+) -> Result<Vec<ArticleForm>, Errors> {
+    if let Some(int) = cap {
+        db.query(
+            "SELECT id, title, author, cover FROM articles WHERE published
+             ORDER BY created_at DESC, title LIMIT $1",
+            &[&int],
+        )
+        .await
+    } else {
+        db.query(
+            "SELECT id, title, author, cover FROM articles WHERE published
+             ORDER BY created_at DESC, title",
+            &[],
+        )
+        .await
+    }?
+    .iter()
+    .map(|row| {
+        Ok(ArticleForm {
+            id: row.try_get(0)?,
+            title: row.try_get(1)?,
+            author: row.try_get(2)?,
+            cover: row.try_get(3)?,
+            published: true,
+            ..Default::default()
+        })
+    })
+    .collect()
+}
+
+pub async fn get_all(db: &Connection<Postgres>) -> Result<Vec<ArticleForm>, Errors> {
+    db.query(
+        "SELECT id, title, author, cover, published FROM articles ORDER BY created_at DESC, title",
+        &[],
+    )
+    .await?
+    .iter()
+    .map(|row| {
+        Ok(ArticleForm {
+            id: row.try_get(0)?,
+            title: row.try_get(1)?,
+            author: row.try_get(2)?,
+            cover: row.try_get(3)?,
+            published: row.try_get(4)?,
+            ..Default::default()
+        })
+    })
+    .collect()
+}
 
 #[derive(Serialize, Deserialize, Default, FromForm)]
 #[serde(crate = "rocket::serde")]
@@ -8,6 +66,7 @@ pub struct ArticleForm {
     pub author: String,
     pub cover: Option<String>,
     pub published: bool,
+    pub rubrics: Vec<Rubric>,
 }
 
 #[derive(Serialize, Deserialize, Default)]

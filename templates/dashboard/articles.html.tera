@@ -11,8 +11,8 @@
     data-hx-target="#entry-list"
   >добавить</button>
   <div id="entry-list" class="flex-row-wrap gap-12px">
-    {% for preview in previews %}
-    {{ htmx::articleEntry(entry=preview) }}
+    {% for article in entries %}
+    {{ htmx::articleEntry(entry=article) }}
     {% endfor %}
   </div>
 </section>

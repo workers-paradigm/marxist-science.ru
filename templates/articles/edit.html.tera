@@ -1,3 +1,4 @@
+{% import "htmx/rubrics/macros" as r %}
 {% extends "base" -%}
 
 {%- block head -%}
@@ -10,16 +11,18 @@
   <div class="ce-block__content">
     <p class="font-light">редактор статей</p>
     <div class="information-container">
-      <input type="hidden" value="{{ id }}" id="id">
-      <label class="input-label">
-        <input type="text" name="title" value="{{ title }}" id="title"
-               class="flex-1" placeholder="Название статьи...">
-      </label>
-      <label class="input-label">
-
-        <input type="text" name="author" value="{{ author }}" id="author"
-               class="flex-1" placeholder="Автор">
-      </label>
+      <form>
+        <input type="hidden" name="id" value="{{ id }}" id="id">
+        <label class="input-label">
+          <input type="text" name="title" value="{{ title }}" id="title"
+                 class="flex-1" placeholder="Название статьи...">
+        </label>
+        <label class="input-label">
+          <input type="text" name="author" value="{{ author }}" id="author"
+                 class="flex-1" placeholder="Автор">
+        </label>
+        {{ r::rubrics_of_article(rubrics=rubrics, id=id) }}
+      </form>
       <button id="save" class="save-button">сохранить</button>
     </div>
   </div>
@@ -31,5 +34,6 @@
 {%- endblock contents -%}
 
 {% block script %}
+<script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
 <script type="module" src="/static/js/editor-setup.js"></script>
 {% endblock script %}

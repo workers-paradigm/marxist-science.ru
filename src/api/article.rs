@@ -6,7 +6,8 @@ use crate::auth::AdminOnly;
 use crate::db::{Connection, Postgres};
 use crate::errors::Errors;
 use crate::models::{
-    article::{ArticleForm, EditorJS},
+    article::{get_published, ArticleForm, EditorJS},
+    rubrics::{self, Rubric},
     Article, Block,
 };
 
@@ -34,14 +35,28 @@ pub async fn create(_admin: AdminOnly, db: Connection<Postgres>) -> Result<Templ
     let article_info = ArticleForm {
         id: row.try_get(0)?,
         title: title.to_owned(),
-        author: String::new(),
-        cover: None,
-        published: false,
+        ..Default::default()
     };
     Ok(Template::render(
         "htmx/articles/entry",
         context! { entry: article_info },
     ))
+}
+
+pub async fn get_article_rubrics(
+    db: &Connection<Postgres>,
+    id: i32,
+) -> Result<Vec<Rubric>, Errors> {
+    db.query(
+        "SELECT rubrics.id, rubrics.title, rubrics.cover FROM rubrics JOIN articles_rubrics ON articles_rubrics.rubric = rubrics.id JOIN articles ON articles.id = articles_rubrics.article WHERE articles.id = $1",
+        &[&id])
+        .await?
+        .iter()
+        .map(|row| Ok(Rubric {
+            id: row.try_get(0)?,
+            title: row.try_get(1)?,
+            cover: row.try_get(2)?,
+        })).collect::<Result<Vec<_>, Errors>>()
 }
 
 #[rocket::get("/articles/edit/<id>")]
@@ -50,18 +65,31 @@ pub async fn edit(
     id: i32,
     db: Connection<Postgres>,
 ) -> Result<Template, Errors> {
-    db.query_opt("SELECT title, author FROM articles WHERE id = $1", &[&id])
+    let mut article = db
+        .query_opt("SELECT title, author FROM articles WHERE id = $1", &[&id])
         .await?
         .map_or(Err(Errors::NotFound), |row| {
             // -> Result<Article, Errors>
-            Ok(Article {
+            Ok(ArticleForm {
                 id,
                 title: row.try_get(0)?,
                 author: row.try_get(1)?,
                 ..Default::default()
             })
-        })
-        .map(|article| Template::render("articles/edit", article))
+        })?;
+    article.rubrics = get_article_rubrics(&db, id).await?;
+    Ok(Template::render("articles/edit", article))
+}
+
+#[rocket::get("/articles/rubrics-of-article/<id>")]
+pub async fn rubrics_of_article(
+    _admin: AdminOnly,
+    db: Connection<Postgres>,
+    id: i32,
+) -> Result<Template, Errors> {
+    get_article_rubrics(&db, id)
+        .await
+        .map(|rubrics| Template::render("articles/rubrics-of-article", context! { rubrics, id }))
 }
 
 #[rocket::put("/articles/save", data = "<article>")]
@@ -152,48 +180,10 @@ pub async fn save_info(
 
 #[rocket::get("/articles")]
 pub async fn index(db: Connection<Postgres>) -> Result<Template, Errors> {
-    fetch_published_previews(&db)
-        .await
-        .map(|previews| Template::render("articles/index", context! { previews: previews }))
-}
-
-pub async fn fetch_published_previews(
-    db: &Connection<Postgres>,
-) -> Result<Vec<ArticleForm>, Errors> {
-    db.query(
-        "SELECT id, title, author, cover FROM articles WHERE published
-         ORDER BY created_at DESC, title",
-        &[],
-    )
-    .await?
-    .iter()
-    .map(|row| {
-        Ok(ArticleForm {
-            id: row.try_get(0)?,
-            title: row.try_get(1)?,
-            author: row.try_get(2)?,
-            cover: row.try_get(3)?,
-            published: true,
-        })
-    })
-    .collect()
-}
-
-pub async fn fetch_all_previews(db: &Connection<Postgres>) -> Result<Vec<ArticleForm>, Errors> {
-    db.query(
-        "SELECT id, title, author, cover, published FROM articles ORDER BY created_at DESC, title",
-        &[],
-    )
-    .await?
-    .iter()
-    .map(|row| {
-        Ok(ArticleForm {
-            id: row.try_get(0)?,
-            title: row.try_get(1)?,
-            author: row.try_get(2)?,
-            cover: row.try_get(3)?,
-            published: row.try_get(4)?,
-        })
-    })
-    .collect()
+    let articles = get_published(&db, None).await?;
+    let rubrics = rubrics::get_populated(&db, None).await?;
+    Ok(Template::render(
+        "articles/index",
+        context! { rubrics, articles },
+    ))
 }

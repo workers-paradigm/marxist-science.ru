@@ -10,7 +10,7 @@ use rocket::{
 use rocket_dyn_templates::{context, Template};
 
 use crate::auth::AdminOnly;
-use crate::db::{self, Connection, Postgres, Transaction};
+use crate::db::{Connection, Postgres, Transaction};
 use crate::errors::Errors;
 use crate::models::{FileRecord, HashedFileBuf};
 
@@ -28,32 +28,31 @@ async fn exists(db: &Transaction<'_>, hash: &[u8]) -> Result<bool, Errors> {
         .map_err(Into::into)
 }
 
-fn path_to(hash: &str, ext: &String) -> String {
-    String::from("/static/uploads/") + hash + "." + ext
-}
-
 fn relative_path_to(hash: &str, ext: &String) -> PathBuf {
     Path::new(relative!["/static/uploads/"]).join(hash.to_owned() + "." + ext)
 }
 
-pub async fn upload_file<T>(
-    db: &Transaction<'_>,
-    file: &mut HashedFileBuf,
-    prepared_query: &T,
-) -> Result<(), Errors>
+pub fn path_to(hash: &str, ext: &String) -> PathBuf {
+    Path::new("/static/uploads/").join(hash.to_owned() + "." + ext)
+}
+
+pub async fn upload_file(db: &Transaction<'_>, file: &mut HashedFileBuf) -> Result<String, Errors>
 where
-    T: ?Sized + db::tokio_postgres::ToStatement,
 {
     let hash: &[u8] = &file.hash[..];
     let hex = hex::encode(hash);
     let ext = file.content_type.extension_err()?;
+    let location = relative_path_to(&hex, &ext);
     if !(exists(&db, hash).await?) {
-        file.persist_to(&relative_path_to(&hex, &ext))?;
-        db.execute(prepared_query, &[&&file.hash[..], &file.name, &ext])
-            .await?;
+        file.persist_to(&location)?;
+        db.execute(
+            "INSERT INTO files (id, title, ext) VALUES ($1, $2, $3)",
+            &[&&file.hash[..], &file.name, &ext],
+        )
+        .await?;
     }
 
-    Ok(())
+    Ok(location.display().to_string())
 }
 
 #[rocket::put("/upload/one_file", data = "<file>")]
@@ -63,12 +62,7 @@ pub async fn upload_one(
     mut file: Form<HashedFileBuf>,
 ) -> Result<Json<FileRecord>, Errors> {
     let db = db.transaction().await?;
-    upload_file(
-        &db,
-        &mut file,
-        "INSERT INTO files (id, title, ext) VALUES ($1, $2, $3)",
-    )
-    .await?;
+    upload_file(&db, &mut file).await?;
     let ext = file.content_type.extension_err()?;
     db.commit().await?;
     Ok(Json(FileRecord::from(
@@ -86,11 +80,8 @@ pub async fn files(
 ) -> Result<Redirect, Errors> {
     let mut output = vec![];
     let db = db.transaction().await?;
-    let query = db
-        .prepare("INSERT INTO files (id, title, ext) VALUES ($1, $2, $3)")
-        .await?;
     for file in &mut files_holder.files {
-        upload_file(&db, file, &query).await?;
+        upload_file(&db, file).await?;
         let ext = file.content_type.extension_err()?;
         output.push(FileRecord::from(&file.hash[..], file.name.clone(), ext));
     }

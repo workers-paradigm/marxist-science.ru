@@ -1,0 +1,11 @@
+{% macro entry(entry) %}
+<li class="article">
+  <a href="/articles/view/{{ entry.id }}">
+    {%- if entry.cover -%}
+    <img src="{{ entry.cover }}" alt="{{ entry.title }}" />
+    {%- endif -%}
+    <h2 class="title">{{- entry.title -}}</h2>
+    <span class="author">{{ entry.author }}</span>
+  </a>
+</li>
+{% endmacro entry %}

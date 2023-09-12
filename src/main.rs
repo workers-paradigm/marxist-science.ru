@@ -10,12 +10,15 @@ mod auth;
 mod errors;
 mod models;
 
-use api::{archive, article, dashboard, upload};
-use db::{Database, Postgres};
+use api::{archive, article, dashboard, rubrics, upload};
+use db::{Connection, Database, Postgres};
+use errors::Errors;
 
 #[rocket::get("/")]
-fn index() -> Template {
-    Template::render("index", context! {})
+pub async fn index(db: Connection<Postgres>) -> Result<Template, Errors> {
+    let rubrics = models::rubrics::get_populated(&db, Some(6)).await?;
+    let articles = models::article::get_published(&db, Some(9)).await?;
+    Ok(Template::render("index", context! { rubrics, articles }))
 }
 
 #[rocket::launch]
@@ -40,11 +43,21 @@ fn rocket() -> _ {
                 article::view,
                 article::save_info,
                 article::delete,
+                article::rubrics_of_article,
                 archive::index,
                 archive::attach_files,
                 archive::detach_files,
                 archive::update_entry_info,
                 archive::create_entry,
+                rubrics::create,
+                rubrics::get,
+                rubrics::update,
+                rubrics::delete,
+                rubrics::index,
+                rubrics::list_for_picker,
+                rubrics::attach_rubric,
+                rubrics::detach_rubric,
+                rubrics::attach_image,
                 upload::upload_one,
                 upload::files,
                 upload::get,
@@ -54,6 +67,7 @@ fn rocket() -> _ {
                 dashboard::archive,
                 dashboard::materials,
                 dashboard::delete_entry,
+                dashboard::rubrics,
                 auth::login,
                 auth::do_log_in,
             ],

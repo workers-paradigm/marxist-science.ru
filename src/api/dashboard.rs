@@ -1,12 +1,19 @@
 use crate::{
-    api::{archive::fetch_all_entries, article::fetch_all_previews},
+    api::archive::fetch_all_entries,
     auth::AdminOnly,
     context,
     db::{Connection, Postgres},
     errors::Errors,
-    models::FileRecord,
+    models::{article, rubrics as rubrics_mod, FileRecord},
     Template,
 };
+
+#[rocket::get("/dashboard/rubrics")]
+pub async fn rubrics(_admin: AdminOnly, db: Connection<Postgres>) -> Result<Template, Errors> {
+    rubrics_mod::get_all(&db)
+        .await
+        .map(|rubrics| Template::render("dashboard/rubrics", context! { rubrics }))
+}
 
 #[rocket::get("/dashboard")]
 pub async fn index(_admin: AdminOnly, db: Connection<Postgres>) -> Result<Template, Errors> {
@@ -33,9 +40,9 @@ pub async fn archive(_admin: AdminOnly, db: Connection<Postgres>) -> Result<Temp
 
 #[rocket::get("/dashboard/articles")]
 pub async fn articles(_admin: AdminOnly, db: Connection<Postgres>) -> Result<Template, Errors> {
-    fetch_all_previews(&db)
+    article::get_all(&db)
         .await
-        .map(|previews| Template::render("dashboard/articles", context! { previews }))
+        .map(|entries| Template::render("dashboard/articles", context! { entries }))
 }
 
 #[rocket::get("/dashboard/materials")]

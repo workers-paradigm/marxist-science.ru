@@ -1,0 +1,2 @@
+{% import "htmx/rubrics/macros" as r %}
+{{ r::list_for_picker(rubrics=rubrics, id=id) }}

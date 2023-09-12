@@ -1,0 +1,18 @@
+{% import "htmx" as htmx %}
+{% extends "base" %}
+
+{% block contents %}
+<button
+  class="save-button"
+  data-hx-post="/rubrics/create"
+  data-hx-swap="afterbegin"
+  data-hx-target="#rubrics-list">+</button>
+<section class="rubrics">
+  <div id="rubrics-list">
+    {% for rubric in rubrics %}
+    {{ htmx::rubric(rubric=rubric) }}
+    {% endfor %}
+  </div>
+</section>
+<script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
+{% endblock contents %}

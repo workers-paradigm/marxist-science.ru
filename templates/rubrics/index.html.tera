@@ -1,0 +1,19 @@
+{% import "macros" as macros %}
+{% import "articles/macros" as article %}
+
+{% extends "base" %}
+
+{% block navigation %}
+{{ macros::hero(title=title, image="/static/img/banner-article.png") }}
+{% endblock navigation %}
+
+{% block contents %}
+<section>
+  <h3 class="section-direction"><a>{{ title }}</a></h3>
+  <ul class="articles-list">
+    {% for entry in entries %}
+    {{ article::entry(entry=entry) }}
+    {% endfor %}
+  </ul>
+</section>
+{% endblock contents %}

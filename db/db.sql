@@ -86,4 +86,22 @@ $down$
   ALTER TABLE articles DROP COLUMN author;
 $down$);
 
+CALL new_version(6, $up$
+  CREATE TABLE rubrics(
+         id serial PRIMARY KEY,
+         title text NOT NULL DEFAULT 'NEED RUBRIC NAME',
+         cover text,
+  );
+
+  CREATE TABLE articles_rubrics(
+         article integer NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+         rubric integer NOT NULL REFERENCES rubrics(id) ON DELETE CASCADE,
+         PRIMARY KEY (article, rubric)
+  );
+$up$,
+$down$
+  DROP TABLE rubrics;
+  DROP TABLE articles_rubrics;
+$down$);
+
 COMMIT;
