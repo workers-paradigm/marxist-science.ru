@@ -104,4 +104,15 @@ $down$
   DROP TABLE articles_rubrics;
 $down$);
 
+CALL new_version(7, $up$
+  CREATE TABLE sessions(
+    id bytea PRIMARY KEY,
+    user_id integer REFERENCES users(id) ON DELETE CASCADE,
+    expires_at timestamp NOT NULL DEFAULT NOW()
+  );
+$up$,
+$down$
+  DROP TABLE sessions;
+$down$);
+
 COMMIT;
