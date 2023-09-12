@@ -23,7 +23,7 @@ pub async fn index(db: Connection<Postgres>) -> Result<Template, Errors> {
 
 #[rocket::launch]
 fn rocket() -> _ {
-    dotenvy::dotenv().unwrap();
+    dotenvy::from_filename(relative![".env"]).unwrap();
 
     let figment = Config::figment()
         .merge((
@@ -34,7 +34,8 @@ fn rocket() -> _ {
         .merge((
             "databases.postgres.url",
             dotenvy::var("DATABASE_URL").expect("DATABASE_URL must be set in the .env file"),
-        ));
+        ))
+        .merge(("template_dir", relative!["templates"]));
 
     rocket::custom(figment)
         .mount(

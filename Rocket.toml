@@ -1,5 +1,2 @@
 [default]
 limits = { file = "24 MiB", data-form = "32 MiB" }
-
-[default.templates]
-template_dir = "templates"
