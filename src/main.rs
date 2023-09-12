@@ -25,10 +25,16 @@ pub async fn index(db: Connection<Postgres>) -> Result<Template, Errors> {
 fn rocket() -> _ {
     dotenvy::dotenv().unwrap();
 
-    let figment = Config::figment().merge((
-        "secret_key",
-        dotenvy::var("ROCKET_COOKIE_KEY").expect("ROCKET_COOKIE_KEY must be set."),
-    ));
+    let figment = Config::figment()
+        .merge((
+            "secret_key",
+            dotenvy::var("ROCKET_COOKIE_KEY")
+                .expect("ROCKET_COOKIE_KEY must be set in the .env file"),
+        ))
+        .merge((
+            "databases.postgres.url",
+            dotenvy::var("DATABASE_URL").expect("DATABASE_URL must be set in the .env file"),
+        ));
 
     rocket::custom(figment)
         .mount(
