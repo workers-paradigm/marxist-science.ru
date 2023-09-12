@@ -26,9 +26,9 @@ CALL new_version(1, $up$
          id serial PRIMARY KEY,
          title text NOT NULL DEFAULT 'Черновик',
          cover text,
-         contents text NOT NULL DEFAULT '{ "blocks" : [ { "type": "paragraph" } ] }'
+         contents text NOT NULL DEFAULT '{ "blocks" : [ { "type": "paragraph" } ] }',
          published boolean NOT NULL DEFAULT false,
-         created_at timestamp NOT NULL DEFAULT NOW();
+         created_at timestamp NOT NULL DEFAULT NOW()
   );
 $up$,
 $down$
@@ -40,7 +40,7 @@ CALL new_version(2, $up$
   CREATE TABLE files (
          id bytea PRIMARY KEY NOT NULL,
          title text NOT NULL,
-         ext text NOT NULL,
+         ext text NOT NULL
   );
 $up$,
 $down$
@@ -55,7 +55,7 @@ CALL new_version(3, $up$
          author text NOT NULL DEFAULT 'Наука Марксизм',
          cover text,
          description text NOT NULL DEFAULT '',
-         created_at timestamp NOT NULL DEFAULT NOW(),
+         created_at timestamp NOT NULL DEFAULT NOW()
   );
 
   CREATE TABLE archive_entries_files (
@@ -90,7 +90,7 @@ CALL new_version(6, $up$
   CREATE TABLE rubrics(
          id serial PRIMARY KEY,
          title text NOT NULL DEFAULT 'NEED RUBRIC NAME',
-         cover text,
+         cover text
   );
 
   CREATE TABLE articles_rubrics(
