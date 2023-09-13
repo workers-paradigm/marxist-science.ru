@@ -731,36 +731,33 @@ ul.admin-menu a, form.file-picker a {
   }
 }
 
-section.rubrics {
-  a.rubric {
+section.rubrics a.rubric {
+  display: inline-block;
+  margin-right: 24px;
+  position: relative;
+  img {
+    max-height: 55vh;
+    width: auto;
     display: block;
-    position: relative;
-    margin-right: 24px;
-    img {
-      max-height: 50vh;
-      width: auto;
-      dispalay: block;
-    }
+  }
 
-    .rubric-title-container {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 24px;
-      transition: bottom 0.2s ease-out;
+  .rubric-title-container {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    transition: bottom 0.2s ease-out;
+    text-align: center;
+  }
 
-      text-align: center;
-    }
+  &:hover .rubric-title-container {
+    bottom: 24px;
+  }
 
-    .rubric-title {
-      color: #fff;
-      font-weight: 600;
-      margin: 0;
-      background: linear-gradient(rgba(var(--coral-rgb), 0) 10%, rgba(var(--coral-rgb), 1) 10%, rgba(var(--coral-rgb), 1) 110%, rgba(var(--coral-rgb), 0) 110%);
-    }
-
-    &:hover .rubric-title-container {
-      bottom: 32px;
-    }
+  .rubric-title {
+    color: #fff;
+    font-weight: 600;
+    margin: 0;
+    background: linear-gradient(rgba(var(--coral-rgb), 0) 10%, rgba(var(--coral-rgb), 1) 10%, rgba(var(--coral-rgb), 1) 110%, rgba(var(--coral-rgb), 0) 110%);
   }
 }

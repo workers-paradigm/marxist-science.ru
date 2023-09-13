@@ -12,10 +12,10 @@
   <h3 class="section-direction">Рубрики</h3>
   <section
     class="rubrics main-carousel"
-    data-flickity='{ "cellAlign": "left", "contain": true, "wrapAround": true }'>
+    data-flickity='{ "wrapAround": true, "autoPlay": true }'>
     {% for rubric in rubrics %}
     <a class="rubric" href="/rubrics/{{ rubric.id }}">
-      <img src="{{ rubric.cover }}" alt="{{ rubric.title }}">
+      <img src="{{ rubric.cover }}" alt="{{ rubric.title }}" />
       <div class="rubric-title-container">
         <span class="rubric-title">{{ rubric.title }}</span>
       </div>
@@ -37,5 +37,5 @@
 {% endblock head %}
 
 {% block script %}
-<script src="/static/js/flickity.js"></script>
+<script src="/static/js/flickity.js" defer></script>
 {% endblock script %}
