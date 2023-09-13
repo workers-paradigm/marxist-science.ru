@@ -101,7 +101,6 @@ impl<'v> FromFormField<'v> for HashedFileBuf {
         let extension = content_type
             .extension()
             .ok_or(form::Error::validation("Invalid file type"))?;
-        warn_!("{}", extension);
         let limits = field.request.limits();
         let limit = limits
             .find(["file", &extension])
