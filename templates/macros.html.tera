@@ -55,7 +55,7 @@
         <div class="absolute-helper">
           <img class="hand-indicator" src="/static/img/hand.jpg" />
           <div>
-            <span>{{ block.data.caption }}</span>
+            <span>{{ block.data.caption | safe }}</span>
           </div>
         </div>
       </figcaption>
