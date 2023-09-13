@@ -237,6 +237,7 @@ div.hero {
       z-index: 1;
       a.logo span {
         margin-left: 24px;
+        background: var(--dark-cyan);
       }
     }
 
@@ -275,10 +276,6 @@ div.hero {
       text-align: center;
       display: block;
       max-width: 80%;
-
-      span {
-        background: linear-gradient(rgba(0,0,0,0) 27%, var(--dark-cyan) 27%, var(--dark-cyan) 88%, rgba(0,0,0,0) 88%);
-      }
     }
   }
 }
