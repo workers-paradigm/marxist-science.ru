@@ -2,7 +2,6 @@ use std::fs::File;
 use std::io::{self, Write};
 use std::path::Path;
 
-use rocket::data::Limits;
 use rocket::form::{self, DataField, FromFormField};
 use rocket::http::ContentType;
 use rocket::serde::{Deserialize, Serialize};
@@ -104,7 +103,7 @@ impl<'v> FromFormField<'v> for HashedFileBuf {
         let limits = field.request.limits();
         let limit = limits
             .find(["file", &extension])
-            .unwrap_or(limits.find(["file"]).unwrap_or(Limits::FILE));
+            .ok_or(form::Error::validation("Server limits are not set"))?;
 
         let bytes = field.data.open(limit).into_bytes().await?;
         if !bytes.is_complete() {
