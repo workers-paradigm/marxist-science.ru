@@ -527,15 +527,16 @@ section.articles-dashboard {
 section.article-edit {
   padding-top: 24px;
 
+  div#rubric-list div, div.information-container form {
+    margin-bottom: 12px;
+  }
+
   .information-container {
     display: flex;
     flex-flow: column;
     align-items: stretch;
     input {
       width: 100%;
-    }
-    button#save {
-
     }
   }
 }
@@ -759,5 +760,26 @@ section.rubrics a.rubric {
     font-weight: 600;
     margin: 0;
     background: linear-gradient(rgba(var(--coral-rgb), 0) 10%, rgba(var(--coral-rgb), 1) 10%, rgba(var(--coral-rgb), 1) 110%, rgba(var(--coral-rgb), 0) 110%);
+  }
+}
+
+section.rubrics div#rubrics-list {
+  margin-top: 12px;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 24px;
+
+  form {
+    display: flex;
+    flex-flow: column;
+    align-items: start;
+    gap: 12px;
+    background: #eaeaea;
+    padding: 12px;
+  }
+
+  form img {
+    max-height: 20vh;
+    width: auto;
   }
 }
