@@ -2,6 +2,10 @@
 
 {% extends "base" %}
 
+{% block title %}
+[e] Архив | НМ
+{% endblock title %}
+
 {% block contents %}
 <section class="archive-menu">
   <button

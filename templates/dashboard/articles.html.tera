@@ -2,6 +2,10 @@
 
 {% extends "base" %}
 
+{% block title %}
+[e] Статьи | НМ
+{% endblock title %}
+
 {% block contents %}
 <section class="articles-dashboard">
   <button

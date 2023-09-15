@@ -1,6 +1,10 @@
 {% import "macros" as macros %}
 {% import "articles/macros" as article %}
 
+{% block title %}
+{{ title }} | НМ
+{% endblock title %}
+
 {% extends "base" %}
 
 {% block navigation %}

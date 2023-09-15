@@ -1,6 +1,11 @@
 {% import "htmx" as htmx %}
 {% extends "base" %}
 
+{% block title %}
+[e] Рубрики | НМ
+{% endblock title %}
+
+
 {% block contents %}
 <button
   class="save-button"

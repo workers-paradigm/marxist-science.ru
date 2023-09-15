@@ -2,6 +2,10 @@
 
 {% extends "base" %}
 
+{% block title %}
+[e] Панель управления | НМ
+{% endblock title %}
+
 {% block contents %}
 <h1>Правка контентом</h1>
 <ul class="admin-menu">

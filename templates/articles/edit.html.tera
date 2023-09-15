@@ -1,6 +1,10 @@
 {% import "htmx/rubrics/macros" as r %}
 {% extends "base" -%}
 
+{% block title %}
+[e] {{ title }} | НМ
+{% endblock title %}
+
 {%- block head -%}
 {{ super() }}
 <link rel="stylesheet" type="text/css" href="/static/css/image-block.css" />

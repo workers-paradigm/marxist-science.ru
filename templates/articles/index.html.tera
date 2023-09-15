@@ -3,6 +3,10 @@
 
 {% extends "base" %}
 
+{% block title %}
+Статьи | НМ
+{% endblock title %}
+
 {%- block navigation -%}
 {{ macros::hero(image="/static/img/banner-article.png", title="Статьи") }}
 {%- endblock navigation -%}

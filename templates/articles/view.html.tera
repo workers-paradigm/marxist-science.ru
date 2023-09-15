@@ -2,6 +2,10 @@
 
 {%- extends "base" -%}
 
+{% block title %}
+{{ article.title }} | НМ
+{% endblock title %}
+
 {%- block navigation -%}
 {%- if article.cover -%}
 {{- macros::hero(title=article.title, image="/static/img/banner-article.png") -}}

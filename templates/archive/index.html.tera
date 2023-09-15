@@ -2,6 +2,10 @@
 
 {% extends "base" %}
 
+{% block title %}
+Архив | НМ
+{% endblock title %}
+
 {% block navigation %}
 {{- macros::hero(title="Архив", image="/static/img/banner-archive.jpg") -}}
 {% endblock navigation %}
