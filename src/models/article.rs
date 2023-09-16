@@ -4,6 +4,7 @@ use crate::{
     errors::Errors,
 };
 use rocket::serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 pub async fn get_published(
     db: &Connection<Postgres>,
@@ -109,6 +110,7 @@ pub enum BlockVariant {
     List(List),
     Quote(Quote),
     Image(Image),
+    Separator(HashMap<i32, i32>),
 }
 
 #[derive(Serialize, Deserialize)]

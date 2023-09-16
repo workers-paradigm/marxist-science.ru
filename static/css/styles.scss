@@ -557,7 +557,7 @@ section.article-edit {
   color: #222;
 }
 
-section.article {
+article {
   font-size: 1.2rem;
   font-family: 'Montserrat', serif;
   font-weight: 450;
@@ -569,7 +569,10 @@ section.article {
   }
 
   p.paragraph {
-    text-align: justify;
+    text-align: left;
+    @media(min-width: $small-width-1) {
+      text-align: justify;
+    }
   }
 
   .heading {
@@ -595,6 +598,23 @@ section.article {
 
   .list {
     margin-left: 1.6rem;
+  }
+
+  hr.separator {
+    border: none;
+    margin-top: 1em;
+    margin-bottom: -0.6em;
+    text-align: center;
+
+    &::before {
+      content: '***';
+      font-size: 2rem;
+      @media(min-width: $small-width-2) {
+        font-size: 3rem;
+      }
+      line-height: 1;
+      font-weight: 400;
+    }
   }
 
   figure {

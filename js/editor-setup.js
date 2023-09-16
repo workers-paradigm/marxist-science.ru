@@ -2,6 +2,7 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import List from '@editorjs/list';
 import Quote from '@editorjs/quote';
+import Separator from '@editorjs/delimiter';
 import Image from './image.js';
 
 const editor = new EditorJS({
@@ -20,6 +21,7 @@ const editor = new EditorJS({
     image: {
       class: Image,
     },
+    separator: Separator,
   },
 });
 
