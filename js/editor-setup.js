@@ -70,7 +70,7 @@ editor.isReady.then(() => {
   const saveButton = document.getElementById('save');
   saveButton.addEventListener('click', save);
   document.addEventListener('keydown', e => {
-    if (e.ctrlKey && e.key === 's') {
+    if (e.ctrlKey && e.code === 'KeyS') {
       e.preventDefault();
       save();
     }
