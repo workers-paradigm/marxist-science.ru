@@ -607,13 +607,13 @@ article {
     text-align: center;
 
     &::before {
-      content: '***';
-      font-size: 2rem;
+      content: '* * *';
+      font-size: 1.8rem;
       @media(min-width: $small-width-2) {
         font-size: 3rem;
       }
       line-height: 1;
-      font-weight: 400;
+      font-weight: 350;
     }
   }
 
