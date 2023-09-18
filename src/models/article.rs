@@ -146,7 +146,7 @@ pub struct List {
 #[serde(crate = "rocket::serde", rename_all = "lowercase")]
 pub enum Alignment {
     Left,
-    Right,
+    Center,
 }
 
 #[derive(Serialize, Deserialize)]
