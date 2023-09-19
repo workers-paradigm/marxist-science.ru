@@ -104,10 +104,14 @@ class Image {
     if (this.#readOnly) {
       return this.#renderReadOnly();
     }
-    const caption = make('input', ['caption']);
+    const caption = make('input', [
+      'caption',
+      'cdx-input',
+      'cdx-quote__caption',
+    ]);
     const img = make('img');
 
-    caption.placeholder = 'caption';
+    caption.placeholder = 'Enter a caption';
     caption.value = this.#caption;
     caption.type = 'text';
     caption.addEventListener('change', e => (this.#caption = e.target.value));

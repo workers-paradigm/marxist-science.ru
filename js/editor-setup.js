@@ -4,6 +4,8 @@ import List from '@editorjs/list';
 import Quote from '@editorjs/quote';
 import Separator from '@editorjs/delimiter';
 import Image from './image.js';
+import ItalicInlineTool from './inline-tool-italic.ts';
+import BoldInlineTool from './inline-tool-bold.ts';
 
 const editor = new EditorJS({
   holder: 'editorjs',
@@ -20,6 +22,12 @@ const editor = new EditorJS({
     },
     image: {
       class: Image,
+    },
+    bold: {
+      class: BoldInlineTool,
+    },
+    italic: {
+      class: ItalicInlineTool,
     },
     separator: Separator,
   },
