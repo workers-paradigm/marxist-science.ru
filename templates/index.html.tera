@@ -1,4 +1,5 @@
 {% import "macros" as macros %}
+{% import "articles/macros" as article %}
 
 {% extends "base" %}
 
@@ -28,15 +29,7 @@
   <h3 class="section-direction"><a href="/articles">Статьи</a></h3>
   <ul class="articles-list">
     {% for entry in articles %}
-    <li class="article">
-      <a href="/articles/view/{{ entry.id }}">
-        {%- if entry.cover -%}
-        <img src="{{ entry.cover }}" alt="{{ entry.title }}" />
-        {%- endif -%}
-        <h2 class="title">{{- entry.title -}}</h2>
-        <span class="author">{{ entry.author }}</span>
-      </a>
-    </li>
+    {{ article::entry(entry=entry) }}
     {% endfor %}
   </ul>
 </main>

@@ -26,7 +26,7 @@
     </a>
     {% endfor %}
   </section>
-  <h3 class="section-direction"><a href="/articles">Статьи</a></h3>
+  <h3 class="section-direction">Статьи</h3>
   <ul class="articles-list">
     {% for entry in articles %}
     {{ article::entry(entry=entry) }}

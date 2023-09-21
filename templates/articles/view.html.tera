@@ -7,11 +7,7 @@
 {% endblock title %}
 
 {%- block navigation -%}
-{%- if article.cover -%}
 {{- macros::hero(title=article.title, image="/static/img/banner-article.png") -}}
-{%- else -%}
-{{ super() }}
-{%- endif -%}
 {%- endblock navigation -%}
 
 {%- block contents -%}
