@@ -462,13 +462,20 @@ section.articles-dashboard {
 
   div#entry-list {
     padding-top: 10px;
-    display: flex;
-    flex-flow: row wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   div.entry {
     padding: 10px;
     border: 1px solid #eee;
+    display: flex;
+    flex-flow: column;
+    gap: 12px;
+
+    input[type="text"] {
+      width: 100%;
+    }
 
     a.edit {
       display: block;
@@ -477,12 +484,18 @@ section.articles-dashboard {
       text-align: center;
     }
 
-    span.success {
-      display: block;
-      margin-top: 6px;
-      padding: 10px;
-      background: #689854;// lightgreen;
-      color: #fff;
+    .rubric-list {
+      display: flex;
+      flex-flow: column;
+      gap: 4px;
+      margin-top: 4px;
+
+      > div {
+        display: grid;
+        grid-template-columns: 1fr 2.15fr;
+        gap: 4px;
+        align-items: center;
+      }
     }
   }
 }
@@ -532,10 +545,6 @@ section.articles-dashboard {
 
 section.article-edit {
   padding-top: 24px;
-
-  div#rubric-list div, div.information-container form {
-    margin-bottom: 12px;
-  }
 
   .information-container {
     display: flex;

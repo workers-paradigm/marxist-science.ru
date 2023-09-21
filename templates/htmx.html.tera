@@ -1,5 +1,8 @@
+{% import "htmx/rubrics/macros" as r %}
+
 {% macro articleEntry(entry, print_saved_success=false) %}
 <div class="entry" id="e{{ entry.id }}">
+  <strong>Статья № {{ entry.id }}</strong>
   <form>
     <input type="hidden" name="id" value="{{ entry.id }}">
     <label class="input-label">
@@ -16,25 +19,24 @@
         {% if entry.published %} checked {% endif %}>
       Опубликована
     </label>
-    <div class="flex-column gap-03rem">
+    <div class="flex-row-nowrap gap-03rem">
+      <button
+        class="save-button flex-1 no-margin"
+        data-hx-put="/articles/save-info"
+        data-hx-target="div#e{{ entry.id }}"
+        data-hx-swap="outerHTML"
+      >сохранить</button>
       <a class="edit button no-margin" target="_blank" href="/articles/edit/{{ entry.id }}">редактировать</a>
-      <div class="flex-row-nowrap gap-03rem">
-        <button
-          class="save-button flex-1 no-margin"
-          data-hx-put="/articles/save-info"
-          data-hx-target="div#e{{ entry.id }}"
-          data-hx-swap="outerHTML"
-        >сохранить</button>
-        <button
-          class="delete-button flex-1 no-margin"
-          data-hx-indicator="next .htmx-indicator"
-          data-hx-delete="/articles/delete"
-          data-hx-target="div#e{{ entry.id }}"
-          data-hx-swap="delete"
-          data-hx-confirm="Навсегда удалить {{ entry.title }}?"
-        >удалить</button>
-      </div>
+      <button
+        class="delete-button flex-1 no-margin"
+        data-hx-indicator="next .htmx-indicator"
+        data-hx-delete="/articles/delete"
+        data-hx-target="div#e{{ entry.id }}"
+        data-hx-swap="delete"
+        data-hx-confirm="Навсегда удалить {{ entry.title }}?"
+      >удалить</button>
     </div>
+    {{ r::rubrics_of_article(rubrics=entry.rubrics, id=entry.id) }}
     <img class="htmx-indicator" src="/static/img/spinner.svg">
     {% if print_saved_success %}
     <span class="success">Успешно сохранено!</span>

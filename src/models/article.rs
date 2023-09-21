@@ -40,23 +40,70 @@ pub async fn get_published(
 }
 
 pub async fn get_all(db: &Connection<Postgres>) -> Result<Vec<ArticleForm>, Errors> {
-    db.query(
+    let prepared = db.prepare("SELECT id, title, cover FROM rubrics JOIN articles_rubrics ON articles_rubrics.rubric = id WHERE articles_rubrics.article = $1").await?;
+    let rows = db.query(
         "SELECT id, title, author, cover, published FROM articles ORDER BY created_at DESC, title",
         &[],
     )
-    .await?
-    .iter()
-    .map(|row| {
-        Ok(ArticleForm {
-            id: row.try_get(0)?,
+        .await?;
+    let mut articles = vec![];
+    for row in rows {
+        let id = row.try_get(0)?;
+        articles.push(ArticleForm {
+            id,
             title: row.try_get(1)?,
             author: row.try_get(2)?,
             cover: row.try_get(3)?,
             published: row.try_get(4)?,
-            ..Default::default()
-        })
-    })
-    .collect()
+            rubrics: db
+                .query(&prepared, &[&id])
+                .await?
+                .iter()
+                .map(|row| {
+                    Ok(Rubric {
+                        id: row.try_get(0)?,
+                        title: row.try_get(1)?,
+                        cover: row.try_get(2)?,
+                    })
+                })
+                .collect::<Result<Vec<_>, Errors>>()?,
+        });
+    }
+    Ok(articles)
+}
+
+pub async fn get_one(db: &Connection<Postgres>, id: i32) -> Result<Option<ArticleForm>, Errors> {
+    let row = db
+        .query_opt(
+            "SELECT id, title, author, cover, published FROM articles WHERE id = $1",
+            &[&id],
+        )
+        .await?;
+
+    let row = match row {
+        Some(row) => row,
+        None => return Ok(None),
+    };
+
+    Ok(Some(ArticleForm {
+        id,
+        title: row.try_get(1)?,
+        author: row.try_get(2)?,
+        cover: row.try_get(3)?,
+        published: row.try_get(4)?,
+        rubrics: db
+            .query("SELECT id, title, cover FROM rubrics JOIN articles_rubrics ON articles_rubrics.rubric = id WHERE articles_rubrics.article = $1", &[&id])
+            .await?
+            .iter()
+            .map(|row| {
+                Ok(Rubric {
+                    id: row.try_get(0)?,
+                    title: row.try_get(1)?,
+                    cover: row.try_get(2)?,
+                })
+            })
+            .collect::<Result<Vec<_>, Errors>>()?,
+    }))
 }
 
 #[derive(Serialize, Deserialize, Default, FromForm)]

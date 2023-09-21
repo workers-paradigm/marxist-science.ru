@@ -6,7 +6,7 @@ use crate::auth::AdminOnly;
 use crate::db::{Connection, Postgres};
 use crate::errors::Errors;
 use crate::models::{
-    article::{get_published, ArticleForm, EditorJS},
+    article::{self, ArticleForm, EditorJS},
     rubrics::{self, Rubric},
     Article, Block,
 };
@@ -77,7 +77,6 @@ pub async fn edit(
                 ..Default::default()
             })
         })?;
-    article.rubrics = get_article_rubrics(&db, id).await?;
     Ok(Template::render("articles/edit", article))
 }
 
@@ -168,19 +167,16 @@ pub async fn save_info(
             &article.published,
         ],
     )
-    .await
-    .map(|_| {
-        Template::render(
-            "htmx/articles/entry",
-            context! { entry: article.into_inner(), just_saved: true },
-        )
-    })
-    .map_err(|e| e.into())
+    .await?;
+    Ok(Template::render(
+        "htmx/articles/entry",
+        context! { entry: article::get_one(&db, article.id).await? },
+    ))
 }
 
 #[rocket::get("/articles")]
 pub async fn index(db: Connection<Postgres>) -> Result<Template, Errors> {
-    let articles = get_published(&db, None).await?;
+    let articles = article::get_published(&db, None).await?;
     let rubrics = rubrics::get_populated(&db, None).await?;
     Ok(Template::render(
         "articles/index",
