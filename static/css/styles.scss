@@ -303,7 +303,6 @@ ul.articles-list {
 
         // uncomment and see what this does. ugly imo
         // text-align: center;
-
         // img {
           // height: 100%;
           // width: auto;
@@ -673,13 +672,13 @@ article {
             position: absolute;
             display: flex;
             flex-flow: row nowrap;
-            align-items: center;
+            align-items: start;
 
             left: 15px;
             gap: 15px;
             div {
-              min-width: 138px;
-              max-width: 139px;
+              min-width: 200px;
+              max-width: 300px;
               text-align: left;
             }
             span {
@@ -760,9 +759,10 @@ ul.admin-menu a, form.file-picker a {
 }
 
 section.rubrics a.rubric {
-  display: inline-block;
+  display: flex;
+  flex-flow: column;
   margin-right: 24px;
-  position: relative;
+
   img {
     max-height: 55vh;
     width: auto;
@@ -770,23 +770,22 @@ section.rubrics a.rubric {
   }
 
   .rubric-title-container {
-    position: absolute;
-    bottom: 12px;
-    left: 0;
-    right: 0;
-    transition: bottom 0.2s ease-out;
+    transition: margin 0.2s ease-out;
     text-align: center;
+    margin-top: 24px;
+    margin-bottom: 24px;
   }
 
   &:hover .rubric-title-container {
-    bottom: 24px;
+    margin-top: 12px;
+    margin-bottom: 32px;
   }
 
   .rubric-title {
-    color: #fff;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0;
-    background: linear-gradient(rgba(var(--coral-rgb), 0) 10%, rgba(var(--coral-rgb), 1) 10%, rgba(var(--coral-rgb), 1) 110%, rgba(var(--coral-rgb), 0) 110%);
+    background: #000;
+    color: #fff;
   }
 }
 
