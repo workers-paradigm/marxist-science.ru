@@ -772,8 +772,10 @@ section.rubrics a.rubric {
   }
 
   .rubric-title-container {
-    transition: margin 0.2s ease-out;
     max-width: 200px;
+    align-self: center;
+
+    transition: margin 0.2s ease-out;
     text-align: center;
     margin-top: 24px;
     margin-bottom: 24px;
