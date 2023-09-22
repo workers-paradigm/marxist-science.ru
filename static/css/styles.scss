@@ -426,6 +426,10 @@ section.archive {
     flex-flow: column;
     align-items: start;
 
+    pre.description {
+        font-family: 'Montserrat', sans-serif;
+    }
+
     div.info {
       width: 100%;
       padding: 10px 0;

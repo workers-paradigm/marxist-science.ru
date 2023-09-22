@@ -17,7 +17,7 @@
     <div class="info">
       <span class="author">{{ entry.author }}</span>
       <h1 class="title">{{ entry.title }}</h1>
-      <p class="description">{{ entry.description }}</p>
+      <pre class="description">{{ entry.description }}</p>
     </div>
     {% if entry.files %}
     <div class="file-list">
