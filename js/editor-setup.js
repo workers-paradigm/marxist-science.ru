@@ -36,51 +36,47 @@ const editor = new EditorJS({
 const id = parseInt(document.getElementById('id').value);
 
 editor.isReady.then(() => {
-  fetch('/articles/contents/' + encodeURIComponent(id), {
-    method: 'GET',
-  }).then(async response => {
-    if (response.ok) {
-      let json = JSON.parse(await response.json());
-      editor.render(json);
-    }
-  });
-
-  const save = async () => {
-    const errorElement = document.getElementById('response-error');
-    const contents = await editor.save();
-    const coverURL =
-      contents.blocks.find(obj => obj.type === 'image')?.data?.url ?? null;
-    let savedResult = {
-      id: parseInt(document.getElementById('id').value),
-      title: document.getElementById('title').value,
-      author: document.getElementById('author').value,
-      coverURL: coverURL,
-      contents: contents,
-    };
-    fetch('/articles/save', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(savedResult),
+  fetch('/articles/contents/' + encodeURIComponent(id))
+    .then(async response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Request for contents failed, reason: ');
+      }
     })
-      .then(async response => {
-        // this handles all responses
-        errorElement.innerText = response.ok ? '' : 'Some shitty error';
-      })
-      .catch(error => {
-        // this handles erros from .then(...)
-        errorElement.innerText =
-          'Some shitty error, but another kind: ' + error;
-      });
-  };
+    .then(json => {
+      console.log(json);
+      return editor.render(JSON.parse(json));
+    })
+    .then(() => {
+      const save = async () => {
+        const errorElement = document.getElementById('response-error');
+        const contents = await editor.save();
+        fetch('/articles/save?id=' + id, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(contents),
+        })
+          .then(async response => {
+            // this handles all responses
+            errorElement.innerText = response.ok ? '' : 'Some shitty error';
+          })
+          .catch(error => {
+            // this handles erros from .then(...)
+            errorElement.innerText =
+              'Some shitty error, but another kind: ' + error;
+          });
+      };
 
-  const saveButton = document.getElementById('save');
-  saveButton.addEventListener('click', save);
-  document.addEventListener('keydown', e => {
-    if (e.ctrlKey && e.code === 'KeyS') {
-      e.preventDefault();
-      save();
-    }
-  });
+      const saveButton = document.getElementById('save');
+      saveButton.addEventListener('click', save);
+      document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.code === 'KeyS') {
+          e.preventDefault();
+          save();
+        }
+      });
+    });
 });

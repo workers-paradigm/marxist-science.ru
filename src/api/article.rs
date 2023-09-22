@@ -6,7 +6,7 @@ use crate::auth::AdminOnly;
 use crate::db::{Connection, Postgres};
 use crate::errors::Errors;
 use crate::models::{
-    article::{self, ArticleForm, EditorJS},
+    article::{self, ArticleForm, BlockVariant, EditorJS},
     rubrics::{self, Rubric},
     Article, Block,
 };
@@ -65,7 +65,7 @@ pub async fn edit(
     id: i32,
     db: Connection<Postgres>,
 ) -> Result<Template, Errors> {
-    let mut article = db
+    let article = db
         .query_opt("SELECT title, author FROM articles WHERE id = $1", &[&id])
         .await?
         .map_or(Err(Errors::NotFound), |row| {
@@ -91,26 +91,28 @@ pub async fn rubrics_of_article(
         .map(|rubrics| Template::render("articles/rubrics-of-article", context! { rubrics, id }))
 }
 
-#[rocket::put("/articles/save", data = "<article>")]
+#[rocket::put("/articles/save?<id>", data = "<contents>")]
 pub async fn save(
     _admin: AdminOnly,
     db: Connection<Postgres>,
-    mut article: Json<Article>,
+    id: i32,
+    mut contents: Json<EditorJS>,
 ) -> Result<(), Errors> {
     // https://github.com/codex-team/editor.js/pull/2454
     // this is needed as a workaround because EditorJS can and will crash on your ass if there isn't at least one block in the contents json.
-    if article.contents.blocks.is_empty() {
-        article.contents.blocks.push(Block::empty());
+    if contents.blocks.is_empty() {
+        contents.blocks.push(Block::empty());
     }
+    let cover = contents
+        .blocks
+        .iter()
+        .find_map(|block| match &block.variant {
+            BlockVariant::Image(i) => Some(i.url.clone()),
+            _ => None,
+        });
     db.execute(
-        "UPDATE articles SET title = $2, author = $3, contents = $4, cover = $5 WHERE id = $1",
-        &[
-            &article.id,
-            &article.title,
-            &article.author,
-            &json::to_string(&article.contents)?,
-            &article.cover,
-        ],
+        "UPDATE articles SET contents = $3, cover = $2 WHERE id = $1",
+        &[&id, &cover, &json::to_string(&contents.into_inner())?],
     )
     .await
     .map(|_| ())
