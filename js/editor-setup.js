@@ -44,10 +44,7 @@ editor.isReady.then(() => {
         throw new Error('Request for contents failed, reason: ');
       }
     })
-    .then(json => {
-      console.log(json);
-      return editor.render(JSON.parse(json));
-    })
+    .then(json => editor.render(JSON.parse(json)))
     .then(() => {
       const save = async () => {
         const errorElement = document.getElementById('response-error');
