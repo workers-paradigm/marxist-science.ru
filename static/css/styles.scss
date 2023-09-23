@@ -236,7 +236,6 @@ div.hero {
       z-index: 1;
       a.logo span {
         margin-left: 24px;
-        background: var(--dark-cyan);
       }
     }
 
@@ -602,6 +601,7 @@ article {
   .heading {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
+    line-height: 1;
   }
 
   a:not(.heading-anchor) {
